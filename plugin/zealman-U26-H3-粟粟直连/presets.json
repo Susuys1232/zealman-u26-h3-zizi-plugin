@@ -1,0 +1,1678 @@
+[
+  {
+    "name": "U26-MiniMax-H3智能一体化视频创作V3-孤海",
+    "workflow_id": "U26-MiniMax-H3智能一体化视频创作V3-孤海",
+    "prompt_key": "185:prompt",
+    "negative_prompt_key": "",
+    "width_key": "",
+    "height_key": "",
+    "seed_key": "9:noise_seed",
+    "seed_value": 123456789,
+    "randomize_seed": true,
+    "output_width": 1280,
+    "output_height": 720,
+    "image_input_mappings": [
+      {
+        "key": "185:ref_image_1",
+        "source": "图1"
+      },
+      {
+        "key": "185:ref_image_2",
+        "source": "图2"
+      },
+      {
+        "key": "185:ref_image_3",
+        "source": "图3"
+      },
+      {
+        "key": "185:ref_image_4",
+        "source": "图4"
+      },
+      {
+        "key": "185:ref_image_5",
+        "source": "图5"
+      },
+      {
+        "key": "185:ref_image_6",
+        "source": "图6"
+      },
+      {
+        "key": "185:ref_image_7",
+        "source": "图7"
+      },
+      {
+        "key": "185:ref_image_8",
+        "source": "图8"
+      },
+      {
+        "key": "185:ref_image_9",
+        "source": "图9"
+      }
+    ],
+    "video_input_mappings": [
+      {
+        "key": "185:ref_video_1",
+        "source": "视频1"
+      },
+      {
+        "key": "185:ref_video_2",
+        "source": "视频2"
+      },
+      {
+        "key": "185:ref_video_3",
+        "source": "视频3"
+      }
+    ],
+    "audio_input_mappings": [
+      {
+        "key": "185:ref_audio_1",
+        "source": "音频1"
+      },
+      {
+        "key": "185:ref_audio_2",
+        "source": "音频2"
+      },
+      {
+        "key": "185:ref_audio_3",
+        "source": "音频3"
+      }
+    ],
+    "reference_label_prefix": false,
+    "custom_input_values": [
+      {
+        "key": "185:main_mode",
+        "value": "text_keyframes",
+        "label": "H3主模式",
+        "type": "select",
+        "options": [
+          {
+            "value": "text_keyframes",
+            "label": "首尾帧"
+          },
+          {
+            "value": "all_reference",
+            "label": "多参"
+          }
+        ]
+      },
+      {
+        "key": "185:duration_seconds",
+        "value": "4",
+        "label": "时长(秒)",
+        "type": "number",
+        "min": 1,
+        "max": 15,
+        "step": 1
+      },
+      {
+        "key": "185:megapixels",
+        "value": "0.4",
+        "label": "百万像素",
+        "type": "number",
+        "min": 0.2,
+        "max": 2,
+        "step": 0.1
+      },
+      {
+        "key": "185:aspect",
+        "value": "adaptive",
+        "label": "宽高比",
+        "type": "select",
+        "options": [
+          "adaptive",
+          "1:1 (Square)",
+          "2:3 (Portrait Photo)",
+          "3:2 (Photo)",
+          "3:4 (Portrait Standard)",
+          "4:3 (Standard)",
+          "9:16 (Portrait Widescreen)",
+          "16:9 (Widescreen)",
+          "21:9 (Ultrawide)"
+        ]
+      },
+      {
+        "key": "228:值",
+        "value": "1.5",
+        "label": "二采放大倍数",
+        "type": "number",
+        "min": 1,
+        "max": 3,
+        "step": 0.1
+      },
+      {
+        "key": "210:n_tiles",
+        "value": 3,
+        "label": "二采分块数量",
+        "type": "number",
+        "min": 1,
+        "max": 16,
+        "step": 1
+      },
+      {
+        "key": "__u26_model_source",
+        "value": "253",
+        "label": "去油开关",
+        "type": "select",
+        "options": [
+          {
+            "value": "253",
+            "label": "开启"
+          },
+          {
+            "value": "264",
+            "label": "关闭"
+          }
+        ]
+      },
+      {
+        "key": "__h3_optimizer.mode",
+        "label": "优化方式",
+        "value": "api"
+      },
+      {
+        "key": "__h3_optimizer.provider",
+        "label": "平台",
+        "value": "runninghub"
+      },
+      {
+        "key": "__h3_optimizer.api_key",
+        "label": "API Key",
+        "value": ""
+      },
+      {
+        "key": "__h3_optimizer.model",
+        "label": "模型",
+        "value": "google/gemini-3.6-flash"
+      },
+      {
+        "key": "__h3_optimizer.max_tokens",
+        "label": "最大输出 Tokens",
+        "value": 4096
+      },
+      {
+        "key": "__h3_optimizer.output_language",
+        "label": "输出语言",
+        "value": "中文"
+      },
+      {
+        "key": "__h3_optimizer.read_media",
+        "label": "读取视觉素材",
+        "value": "True"
+      },
+      {
+        "key": "__h3_optimizer.auto_optimize",
+        "label": "运行前自动优化提示词",
+        "value": "False"
+      }
+    ],
+    "fixed_input_values": {},
+    "workflow_template": {
+      "8": {
+        "inputs": {
+          "model": [
+            "126",
+            0
+          ],
+          "conditioning": [
+            "124",
+            0
+          ]
+        },
+        "class_type": "BasicGuider",
+        "_meta": {
+          "title": "基本引导器"
+        }
+      },
+      "9": {
+        "inputs": {
+          "noise_seed": 123456789
+        },
+        "class_type": "RandomNoise",
+        "_meta": {
+          "title": "随机噪波"
+        }
+      },
+      "10": {
+        "inputs": {
+          "noise": [
+            "9",
+            0
+          ],
+          "guider": [
+            "8",
+            0
+          ],
+          "sampler": [
+            "126",
+            1
+          ],
+          "sigmas": [
+            "126",
+            2
+          ],
+          "latent_image": [
+            "124",
+            1
+          ]
+        },
+        "class_type": "SamplerCustomAdvanced",
+        "_meta": {
+          "title": "自定义采样器（高级）"
+        }
+      },
+      "12": {
+        "inputs": {
+          "frame_rate": 24,
+          "loop_count": 0,
+          "filename_prefix": "MiniMaxH3/一采",
+          "format": "video/h264-mp4",
+          "pix_fmt": "yuv420p",
+          "crf": 16,
+          "save_metadata": false,
+          "trim_to_audio": false,
+          "pingpong": false,
+          "save_output": true,
+          "images": [
+            "127",
+            0
+          ],
+          "audio": [
+            "102",
+            0
+          ]
+        },
+        "class_type": "VHS_VideoCombine",
+        "_meta": {
+          "title": "Video Combine 🎥🅥🅗🅢"
+        }
+      },
+      "17": {
+        "inputs": {
+          "model": [
+            "243",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+        "_meta": {
+          "title": "MiniMax H3 Mem Eff Sage Attention Patch"
+        }
+      },
+      "78": {
+        "inputs": {
+          "unet_name": "minimax/minimax_h3_fl2va_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        },
+        "class_type": "UNETLoader",
+        "_meta": {
+          "title": "UNet加载器"
+        }
+      },
+      "102": {
+        "inputs": {
+          "boolean": [
+            "124",
+            6
+          ],
+          "on_true": [
+            "124",
+            5
+          ],
+          "on_false": [
+            "127",
+            1
+          ]
+        },
+        "class_type": "easy ifElse",
+        "_meta": {
+          "title": "是否判断"
+        }
+      },
+      "124": {
+        "inputs": {
+          "integration": [
+            "185",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3IntegrationAdapterGH",
+        "_meta": {
+          "title": "MiniMax-H3 适配器(GH)"
+        }
+      },
+      "126": {
+        "inputs": {
+          "steps": 8,
+          "shift_video": 12,
+          "shift_audio": 3,
+          "sampler_name": "dual_clock_euler",
+          "scheduler": "native_flow",
+          "model": [
+            "17",
+            0
+          ],
+          "av_latent": [
+            "124",
+            1
+          ]
+        },
+        "class_type": "MiniMaxH3DualClockT8GH",
+        "_meta": {
+          "title": "MiniMax-H3 双时钟-T8(GH)"
+        }
+      },
+      "127": {
+        "inputs": {
+          "av_latent": [
+            "10",
+            1
+          ],
+          "video_vae": [
+            "124",
+            2
+          ],
+          "audio_vae": [
+            "124",
+            3
+          ]
+        },
+        "class_type": "MiniMaxH3AVDecodeT8GH",
+        "_meta": {
+          "title": "MiniMax-H3解码-T8(GH)"
+        }
+      },
+      "185": {
+        "inputs": {
+          "main_mode": "text_keyframes",
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "video_vae_name": "minimax_h3_video_vae_fp16.safetensors",
+          "audio_vae_name": "minimax_h3_audio_vae_fp32.safetensors",
+          "aspect": "adaptive",
+          "megapixels": 0.5,
+          "duration_seconds": 10,
+          "prompt": "integrated_multimodal_description:\n[Shot 1]\n画面从 <Picture 1>开始，身穿蓝白相间古装汉服、头戴精致发饰的年轻女子 (S1) 在古风庭院的水池边缓缓踱步。她一边走，一边面带微笑地摇头晃脑，开始高声有节奏、有情感的朗读搞笑诗句：<d>[Chinese]从前每月光，也是姐妹双，举头望明月，低头撕裤裆</d>。画面中同步出现4句诗词字幕。\n在第2秒时，一本暗蓝色封皮的古书突然从画面上方砸下来，(S1) 反应敏捷地伸出右手，稳稳地接住了这本古书。此时镜头开始逆时针环绕 (S1) 进行360度拍摄，平滑地扫过她的侧面和背面，展示她飞扬的衣袖和庭院背景。当诗句读到最后一句“低头撕裤裆”时，(S1) 脸上露出极力憋笑的神情，嘴角剧烈颤抖，双眼弯成了月牙，几乎要笑出声来。\n随着环绕镜头的完成，摄像机最终停在 (S1) 正面的上半身近景特写，同时画面焦点微调，清晰地展现出她手中那本暗蓝色古书的封面，上面赫然写着五个黑色毛笔字：“唐僧三百首”。\n\noverall_soundscape:\n清脆的脚步声在石板路上回响，伴随着衣物摩擦的沙沙声。女子清脆悦耳的声音带着夸张的朗诵腔调。\nnon_diegetic_music:\n无背景乐",
+          "task_type": "auto",
+          "audio_mode": "native",
+          "audio_denoise_strength": 1,
+          "drive_audio_ordinal": 0,
+          "strict_prompt_tags": true,
+          "ref_image_size": "match",
+          "first_frame": "d4b54ce243945f24e83944dd8818bd94d23271a704637c824dc111281fd6ee6b.png",
+          "last_frame": "",
+          "hybrid_audio": "",
+          "ref_image_1": "",
+          "ref_image_2": "",
+          "ref_image_3": "",
+          "ref_image_4": "",
+          "ref_image_5": "",
+          "ref_image_6": "",
+          "ref_image_7": "",
+          "ref_image_8": "",
+          "ref_image_9": "",
+          "ref_video_1": "",
+          "ref_video_2": "",
+          "ref_video_3": "",
+          "ref_audio_1": "",
+          "ref_audio_2": "",
+          "ref_audio_3": "",
+          "gh_state_json": "{\"mode\":\"text_keyframes\",\"media\":[[\"first_frame\",{\"name\":\"d4b54ce243945f24e83944dd8818bd94d23271a704637c824dc111281fd6ee6b.png\",\"kind\":\"image\"}]],\"vacantMediaSlots\":[],\"prompt\":\"integrated_multimodal_description:\\n[Shot 1]\\n画面从 <Picture 1>开始，身穿蓝白相间古装汉服、头戴精致发饰的年轻女子 (S1) 在古风庭院的水池边缓缓踱步。她一边走，一边面带微笑地摇头晃脑，开始高声有节奏、有情感的朗读搞笑诗句：<d>[Chinese]从前每月光，也是姐妹双，举头望明月，低头撕裤裆</d>。画面中同步出现4句诗词字幕。\\n在第2秒时，一本暗蓝色封皮的古书突然从画面上方砸下来，(S1) 反应敏捷地伸出右手，稳稳地接住了这本古书。此时镜头开始逆时针环绕 (S1) 进行360度拍摄，平滑地扫过她的侧面和背面，展示她飞扬的衣袖和庭院背景。当诗句读到最后一句“低头撕裤裆”时，(S1) 脸上露出极力憋笑的神情，嘴角剧烈颤抖，双眼弯成了月牙，几乎要笑出声来。\\n随着环绕镜头的完成，摄像机最终停在 (S1) 正面的上半身近景特写，同时画面焦点微调，清晰地展现出她手中那本暗蓝色古书的封面，上面赫然写着五个黑色毛笔字：“唐僧三百首”。\\n\\noverall_soundscape:\\n清脆的脚步声在石板路上回响，伴随着衣物摩擦的沙沙声。女子清脆悦耳的声音带着夸张的朗诵腔调。\\nnon_diegetic_music:\\n无背景乐\",\"prompts\":{\"text_keyframes\":\"integrated_multimodal_description:\\n[Shot 1]\\n画面从 <Picture 1>开始，身穿蓝白相间古装汉服、头戴精致发饰的年轻女子 (S1) 在古风庭院的水池边缓缓踱步。她一边走，一边面带微笑地摇头晃脑，开始高声有节奏、有情感的朗读搞笑诗句：<d>[Chinese]从前每月光，也是姐妹双，举头望明月，低头撕裤裆</d>。画面中同步出现4句诗词字幕。\\n在第2秒时，一本暗蓝色封皮的古书突然从画面上方砸下来，(S1) 反应敏捷地伸出右手，稳稳地接住了这本古书。此时镜头开始逆时针环绕 (S1) 进行360度拍摄，平滑地扫过她的侧面和背面，展示她飞扬的衣袖和庭院背景。当诗句读到最后一句“低头撕裤裆”时，(S1) 脸上露出极力憋笑的神情，嘴角剧烈颤抖，双眼弯成了月牙，几乎要笑出声来。\\n随着环绕镜头的完成，摄像机最终停在 (S1) 正面的上半身近景特写，同时画面焦点微调，清晰地展现出她手中那本暗蓝色古书的封面，上面赫然写着五个黑色毛笔字：“唐僧三百首”。\\n\\noverall_soundscape:\\n清脆的脚步声在石板路上回响，伴随着衣物摩擦的沙沙声。女子清脆悦耳的声音带着夸张的朗诵腔调。\\nnon_diegetic_music:\\n无背景乐\",\"all_reference\":\"\"},\"height\":1076,\"advanced\":false,\"optimizer\":{\"mode\":\"api\",\"provider\":\"runninghub\",\"api_url\":\"https://www.runninghub.cn/openapi/v2\",\"api_key\":\"\",\"model\":\"google/gemini-3.6-flash\",\"protocol\":\"runninghub\",\"read_media\":true,\"output_language\":\"中文\",\"local_model\":\"Huihui-Qwen3.8-27B-abliterated-Q4_K.gguf\",\"local_mmproj\":\"Qwen3.8-27B-mmproj-BF16.gguf\",\"local_device\":\"cuda\",\"max_tokens\":4096,\"auto_optimize\":false,\"api_keys\":{\"runninghub\":\"\",\"runninghub_overseas\":\"\"},\"has_api_key\":false,\"runninghub_models\":[\"openai/gpt-5.6-sol\",\"openai/gpt-5.6-sol-saver\",\"openai/gpt-5.6-terra\",\"openai/gpt-5.6-terra-saver\",\"openai/gpt-5.5\",\"openai/gpt-5.5-saver\",\"openai/gpt-5.6-luna\",\"google/gemini-3.1-flash-lite-preview\",\"google/gemini-3.5-flash\",\"openai/gpt-5.5-pro\",\"anthropic/claude-fable-5\",\"openai/gpt-5.4-pro\",\"anthropic/claude-opus-5\",\"anthropic/claude-opus-4.8\",\"anthropic/claude-opus-4.7\",\"glm-5.2\",\"anthropic/claude-opus-4.6\",\"openai/gpt-5.4\",\"openai/gpt-5.3-codex\",\"glm-5.1\",\"glm-5-turbo\",\"qwen/qwen3.8-max\",\"anthropic/claude-sonnet-4.6\",\"glm-5\",\"anthropic/claude-sonnet-5\",\"qwen/qwen3.7-max\",\"glm-5v-turbo\",\"qwen/qwen3.7-plus\",\"deepseek/deepseek-v4-pro\",\"xai/grok-4.6\",\"xai/grok-4.5\",\"xai/grok-4.3\",\"qwen/qwen3.6-plus\",\"google/gemini-3.1-pro-preview\",\"bytedance/doubao-seed-evolving\",\"bytedance/doubao-seed-2.1-pro\",\"anthropic/claude-sonnet-4.5\",\"bytedance/doubao-seed-2.1-turbo\",\"anthropic/claude-opus-4.5\",\"bytedance/doubao-seed-2.0-pro\",\"bytedance/doubao-seed-2.0-code\",\"deepseek/deepseek-v4-flash\",\"qwen/qwen3.6-flash\",\"openai/gpt-5.4-mini\",\"openai/gpt-5.4-nano\",\"google/gemini-3-flash-preview\",\"google/gemini-2.5-flash\",\"bytedance/doubao-seed-2.0-lite\",\"bytedance/doubao-seed-2.0-mini\",\"minimax/minimax-m2.7\",\"anthropic/claude-haiku-4.5\",\"qwen/qwen3.6-max-preview\",\"anthropic/claude-haiku-4.5-saver\",\"anthropic/claude-opus-4.6-saver\",\"anthropic/claude-opus-4.7-saver\",\"anthropic/claude-opus-4.8-saver\",\"anthropic/claude-sonnet-4.6-saver\",\"google/gemini-2.5-pro\",\"google/gemini-3.5-flash-lite\",\"google/gemini-3.6-flash\",\"google/gemini-3.7-flash\"],\"runninghub_overseas_models\":[\"openai/gpt-5.6-sol\",\"openai/gpt-5.6-sol-saver\",\"openai/gpt-5.6-terra\",\"openai/gpt-5.6-terra-saver\",\"openai/gpt-5.5\",\"openai/gpt-5.5-saver\",\"openai/gpt-5.6-luna\",\"google/gemini-3.1-flash-lite-preview\",\"google/gemini-3.5-flash\",\"openai/gpt-5.5-pro\",\"anthropic/claude-fable-5\",\"openai/gpt-5.4-pro\",\"anthropic/claude-opus-5\",\"anthropic/claude-opus-4.8\",\"anthropic/claude-opus-4.7\",\"glm-5.2\",\"anthropic/claude-opus-4.6\",\"openai/gpt-5.4\",\"openai/gpt-5.3-codex\",\"glm-5.1\",\"glm-5-turbo\",\"qwen/qwen3.8-max\",\"anthropic/claude-sonnet-4.6\",\"glm-5\",\"anthropic/claude-sonnet-5\",\"qwen/qwen3.7-max\",\"glm-5v-turbo\",\"qwen/qwen3.7-plus\",\"deepseek/deepseek-v4-pro\",\"xai/grok-4.6\",\"xai/grok-4.5\",\"xai/grok-4.3\",\"qwen/qwen3.6-plus\",\"google/gemini-3.1-pro-preview\",\"bytedance/doubao-seed-evolving\",\"bytedance/doubao-seed-2.1-pro\",\"anthropic/claude-sonnet-4.5\",\"bytedance/doubao-seed-2.1-turbo\",\"anthropic/claude-opus-4.5\",\"bytedance/doubao-seed-2.0-pro\",\"bytedance/doubao-seed-2.0-code\",\"deepseek/deepseek-v4-flash\",\"qwen/qwen3.6-flash\",\"openai/gpt-5.4-mini\",\"openai/gpt-5.4-nano\",\"google/gemini-3-flash-preview\",\"google/gemini-2.5-flash\",\"bytedance/doubao-seed-2.0-lite\",\"bytedance/doubao-seed-2.0-mini\",\"minimax/minimax-m2.7\",\"anthropic/claude-haiku-4.5\",\"qwen/qwen3.6-max-preview\",\"anthropic/claude-haiku-4.5-saver\",\"anthropic/claude-opus-4.6-saver\",\"anthropic/claude-opus-4.7-saver\",\"anthropic/claude-opus-4.8-saver\",\"anthropic/claude-sonnet-4.6-saver\",\"google/gemini-2.5-pro\",\"google/gemini-3.5-flash-lite\",\"google/gemini-3.6-flash\",\"google/gemini-3.7-flash\"],\"models\":[{\"name\":\"base\",\"path\":\"/workspace/ComfyUI/models/LLM/base\",\"relative_path\":\"base\",\"format\":\"transformers\"},{\"name\":\"base-ft\",\"path\":\"/workspace/ComfyUI/models/LLM/base-ft\",\"relative_path\":\"base-ft\",\"format\":\"transformers\"},{\"name\":\"base-PromptGen\",\"path\":\"/workspace/ComfyUI/models/LLM/base-PromptGen\",\"relative_path\":\"base-PromptGen\",\"format\":\"transformers\"},{\"name\":\"CogFlorence-2-Large-Freeze\",\"path\":\"/workspace/ComfyUI/models/LLM/CogFlorence-2-Large-Freeze\",\"relative_path\":\"CogFlorence-2-Large-Freeze\",\"format\":\"transformers\"},{\"name\":\"CogFlorence-2.1-Large\",\"path\":\"/workspace/ComfyUI/models/LLM/CogFlorence-2.1-Large\",\"relative_path\":\"CogFlorence-2.1-Large\",\"format\":\"transformers\"},{\"name\":\"CogFlorence-2.2-Large\",\"path\":\"/workspace/ComfyUI/models/LLM/CogFlorence-2.2-Large\",\"relative_path\":\"CogFlorence-2.2-Large\",\"format\":\"transformers\"},{\"name\":\"DeepSeek-OCR\",\"path\":\"/workspace/ComfyUI/models/LLM/DeepSeek-OCR\",\"relative_path\":\"DeepSeek-OCR\",\"format\":\"transformers\"},{\"name\":\"DocVQA\",\"path\":\"/workspace/ComfyUI/models/LLM/DocVQA\",\"relative_path\":\"DocVQA\",\"format\":\"transformers\"},{\"name\":\"Florence-2-base\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-base\",\"relative_path\":\"Florence-2-base\",\"format\":\"transformers\"},{\"name\":\"Florence-2-base-ft\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-base-ft\",\"relative_path\":\"Florence-2-base-ft\",\"format\":\"transformers\"},{\"name\":\"Florence-2-base-PromptGen\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-base-PromptGen\",\"relative_path\":\"Florence-2-base-PromptGen\",\"format\":\"transformers\"},{\"name\":\"Florence-2-base-PromptGen-v1.5\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-base-PromptGen-v1.5\",\"relative_path\":\"Florence-2-base-PromptGen-v1.5\",\"format\":\"transformers\"},{\"name\":\"Florence-2-base-PromptGen-v2.0\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-base-PromptGen-v2.0\",\"relative_path\":\"Florence-2-base-PromptGen-v2.0\",\"format\":\"transformers\"},{\"name\":\"Florence-2-DocVQA\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-DocVQA\",\"relative_path\":\"Florence-2-DocVQA\",\"format\":\"transformers\"},{\"name\":\"Florence-2-Flux-Large\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-Flux-Large\",\"relative_path\":\"Florence-2-Flux-Large\",\"format\":\"transformers\"},{\"name\":\"Florence-2-large\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-large\",\"relative_path\":\"Florence-2-large\",\"format\":\"transformers\"},{\"name\":\"Florence-2-large-ft\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-large-ft\",\"relative_path\":\"Florence-2-large-ft\",\"format\":\"transformers\"},{\"name\":\"Florence-2-large-PromptGen-v1.5\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-large-PromptGen-v1.5\",\"relative_path\":\"Florence-2-large-PromptGen-v1.5\",\"format\":\"transformers\"},{\"name\":\"Florence-2-large-PromptGen-v2.0\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-large-PromptGen-v2.0\",\"relative_path\":\"Florence-2-large-PromptGen-v2.0\",\"format\":\"transformers\"},{\"name\":\"Florence-2-SD3-Captioner\",\"path\":\"/workspace/ComfyUI/models/LLM/Florence-2-SD3-Captioner\",\"relative_path\":\"Florence-2-SD3-Captioner\",\"format\":\"transformers\"},{\"name\":\"Huihui-Qwen3-VL-4B-Instruct-abliterated.Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Huihui-Qwen3-VL-4B-Instruct-abliterated.Q8_0.gguf\",\"relative_path\":\"Huihui-Qwen3-VL-4B-Instruct-abliterated.Q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Huihui-Qwen3-VL-4B-Instruct-abliterated.mmproj-Q8_0.gguf\"]},{\"name\":\"Huihui-Qwen3-VL-8B-Instruct-abliterated.Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Huihui-Qwen3-VL-8B-Instruct-abliterated.Q8_0.gguf\",\"relative_path\":\"Huihui-Qwen3-VL-8B-Instruct-abliterated.Q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Huihui-Qwen3-VL-8B-Instruct-abliterated.mmproj-Q8_0.gguf\"]},{\"name\":\"Huihui-Qwen3.8-27B-abliterated-Q4_K.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Huihui-Qwen3.8-27B-abliterated-Q4_K.gguf\",\"relative_path\":\"Huihui-Qwen3.8-27B-abliterated-Q4_K.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.8-27B-mmproj-BF16.gguf\"]},{\"name\":\"large\",\"path\":\"/workspace/ComfyUI/models/LLM/large\",\"relative_path\":\"large\",\"format\":\"transformers\"},{\"name\":\"large-ft\",\"path\":\"/workspace/ComfyUI/models/LLM/large-ft\",\"relative_path\":\"large-ft\",\"format\":\"transformers\"},{\"name\":\"llama-joycaption-alpha-two-hf-llava\",\"path\":\"/workspace/ComfyUI/models/LLM/llama-joycaption-alpha-two-hf-llava\",\"relative_path\":\"llama-joycaption-alpha-two-hf-llava\",\"format\":\"transformers\"},{\"name\":\"llama-joycaption-beta-one-hf-llava\",\"path\":\"/workspace/ComfyUI/models/LLM/llama-joycaption-beta-one-hf-llava\",\"relative_path\":\"llama-joycaption-beta-one-hf-llava\",\"format\":\"transformers\"},{\"name\":\"llava-llama-3-8b-v1_1-transformers\",\"path\":\"/workspace/ComfyUI/models/LLM/llava-llama-3-8b-v1_1-transformers\",\"relative_path\":\"llava-llama-3-8b-v1_1-transformers\",\"format\":\"transformers\"},{\"name\":\"MiniCPM-V-4\",\"path\":\"/workspace/ComfyUI/models/LLM/MiniCPM-V-4\",\"relative_path\":\"MiniCPM-V-4\",\"format\":\"transformers\"},{\"name\":\"MiniCPM-V-4-int4\",\"path\":\"/workspace/ComfyUI/models/LLM/MiniCPM-V-4-int4\",\"relative_path\":\"MiniCPM-V-4-int4\",\"format\":\"transformers\"},{\"name\":\"MiniCPM-V-4_5\",\"path\":\"/workspace/ComfyUI/models/LLM/MiniCPM-V-4_5\",\"relative_path\":\"MiniCPM-V-4_5\",\"format\":\"transformers\"},{\"name\":\"MiniCPM-V-4_5-int4\",\"path\":\"/workspace/ComfyUI/models/LLM/MiniCPM-V-4_5-int4\",\"relative_path\":\"MiniCPM-V-4_5-int4\",\"format\":\"transformers\"},{\"name\":\"OmniGen-v1\",\"path\":\"/workspace/ComfyUI/models/LLM/OmniGen-v1\",\"relative_path\":\"OmniGen-v1\",\"format\":\"transformers\"},{\"name\":\"Phi-3.5-vision-instruct\",\"path\":\"/workspace/ComfyUI/models/LLM/Phi-3.5-vision-instruct\",\"relative_path\":\"Phi-3.5-vision-instruct\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-Omni-3B\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-Omni-3B\",\"relative_path\":\"Qwen2.5-Omni-3B\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-Omni-7B\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-Omni-7B\",\"relative_path\":\"Qwen2.5-Omni-7B\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-VL-3B-Instruct\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-VL-3B-Instruct\",\"relative_path\":\"Qwen2.5-VL-3B-Instruct\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-VL-3B-Instruct-AWQ\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-VL-3B-Instruct-AWQ\",\"relative_path\":\"Qwen2.5-VL-3B-Instruct-AWQ\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-VL-7B-Instruct\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-VL-7B-Instruct\",\"relative_path\":\"Qwen2.5-VL-7B-Instruct\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-VL-7B-Instruct-AWQ\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-VL-7B-Instruct-AWQ\",\"relative_path\":\"Qwen2.5-VL-7B-Instruct-AWQ\",\"format\":\"transformers\"},{\"name\":\"Qwen2.5-VL-7B-SPC\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen2.5-VL-7B-SPC\",\"relative_path\":\"Qwen2.5-VL-7B-SPC\",\"format\":\"transformers\"},{\"name\":\"Qwen3.5-27B-heretic.Q4_K_M.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-27B-heretic.Q4_K_M.gguf\",\"relative_path\":\"Qwen3.5-27B-heretic.Q4_K_M.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.5-27B-heretic.mmproj-f16.gguf\",\"Qwen3.5-27B-heretic.mmproj-Q8_0.gguf\"]},{\"name\":\"Qwen3.5-27B-heretic.Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-27B-heretic.Q8_0.gguf\",\"relative_path\":\"Qwen3.5-27B-heretic.Q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.5-27B-heretic.mmproj-f16.gguf\",\"Qwen3.5-27B-heretic.mmproj-Q8_0.gguf\"]},{\"name\":\"Qwen3.5-9B-Claude-4.6-Opus-Deckard-V4.2-Uncensored-Heretic-Thinking.i1-Q4_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-Claude-4.6-Opus-Deckard-V4.2-Uncensored-Heretic-Thinking.i1-Q4_0.gguf\",\"relative_path\":\"Qwen3.5-9B-Claude-4.6-Opus-Deckard-V4.2-Uncensored-Heretic-Thinking.i1-Q4_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf\"]},{\"name\":\"Qwen3.5-9b-heretic-v2-q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9b-heretic-v2-q8_0.gguf\",\"relative_path\":\"Qwen3.5-9b-heretic-v2-q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.5-9B-mmproj-BF16.gguf\",\"Qwen3.5-9B-mmproj-F16.gguf\"]},{\"name\":\"Qwen3.5-9B-heretic.Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-heretic.Q8_0.gguf\",\"relative_path\":\"Qwen3.5-9B-heretic.Q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.5-9B-mmproj-BF16.gguf\",\"Qwen3.5-9B-mmproj-F16.gguf\"]},{\"name\":\"Qwen3.5-9B-Q4_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-Q4_0.gguf\",\"relative_path\":\"Qwen3.5-9B-Q4_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.5-9B-mmproj-BF16.gguf\",\"Qwen3.5-9B-mmproj-F16.gguf\"]},{\"name\":\"Qwen3.5-9B-Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-Q8_0.gguf\",\"relative_path\":\"Qwen3.5-9B-Q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.5-9B-mmproj-BF16.gguf\",\"Qwen3.5-9B-mmproj-F16.gguf\"]},{\"name\":\"Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf\",\"relative_path\":\"Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ3_M.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ3_M.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ3_M.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ3_XS.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ3_XS.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ3_XS.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ4_XS.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ4_XS.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-IQ4_XS.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q2_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q2_K_P.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q2_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q3_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q3_K_P.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q3_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q4_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q4_K_P.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q4_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q5_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q5_K_P.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q5_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q6_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q6_K_P.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q6_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf\",\"relative_path\":\"Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf\",\"relative_path\":\"Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf\",\"relative_path\":\"Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-Q8_K_P.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"mmproj-Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-f16.gguf\"]},{\"name\":\"Qwen3.8-27B-IQ4_XS.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.8-27B-IQ4_XS.gguf\",\"relative_path\":\"Qwen3.8-27B-IQ4_XS.gguf\",\"format\":\"gguf\",\"mmproj_candidates\":[\"Qwen3.8-27B-mmproj-BF16.gguf\"]},{\"name\":\"SD3-Captioner\",\"path\":\"/workspace/ComfyUI/models/LLM/SD3-Captioner\",\"relative_path\":\"SD3-Captioner\",\"format\":\"transformers\"},{\"name\":\"SkyCaptioner-V1\",\"path\":\"/workspace/ComfyUI/models/LLM/SkyCaptioner-V1\",\"relative_path\":\"SkyCaptioner-V1\",\"format\":\"transformers\"},{\"name\":\"ToriiGate-0.5\",\"path\":\"/workspace/ComfyUI/models/LLM/ToriiGate-0.5\",\"relative_path\":\"ToriiGate-0.5\",\"format\":\"transformers\"}],\"mmproj_models\":[{\"name\":\"gemma-4-26B-A4B-it-heretic-mmproj.bf16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/gemma-4-26B-A4B-it-heretic-mmproj.bf16.gguf\",\"relative_path\":\"gemma-4-26B-A4B-it-heretic-mmproj.bf16.gguf\"},{\"name\":\"gemma-4-26B-A4B-it-heretic-mmproj.q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/gemma-4-26B-A4B-it-heretic-mmproj.q8_0.gguf\",\"relative_path\":\"gemma-4-26B-A4B-it-heretic-mmproj.q8_0.gguf\"},{\"name\":\"gemma-4-31B-it-abliterated-mmproj-F16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/gemma-4-31B-it-abliterated-mmproj-F16.gguf\",\"relative_path\":\"gemma-4-31B-it-abliterated-mmproj-F16.gguf\"},{\"name\":\"Huihui-Qwen3-VL-4B-Instruct-abliterated.mmproj-Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Huihui-Qwen3-VL-4B-Instruct-abliterated.mmproj-Q8_0.gguf\",\"relative_path\":\"Huihui-Qwen3-VL-4B-Instruct-abliterated.mmproj-Q8_0.gguf\"},{\"name\":\"Huihui-Qwen3-VL-8B-Instruct-abliterated.mmproj-Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Huihui-Qwen3-VL-8B-Instruct-abliterated.mmproj-Q8_0.gguf\",\"relative_path\":\"Huihui-Qwen3-VL-8B-Instruct-abliterated.mmproj-Q8_0.gguf\"},{\"name\":\"mmproj-Qwen2.5-Omni-7B-F16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/mmproj-Qwen2.5-Omni-7B-F16.gguf\",\"relative_path\":\"mmproj-Qwen2.5-Omni-7B-F16.gguf\"},{\"name\":\"mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf\",\"relative_path\":\"mmproj-Qwen3.5-9B-Uncensored-HauhauCS-Aggressive-BF16.gguf\"},{\"name\":\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\",\"relative_path\":\"mmproj-Qwen3.6-27B-Uncensored-HauhauCS-Aggressive-f16.gguf\"},{\"name\":\"mmproj-Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-f16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/mmproj-Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-f16.gguf\",\"relative_path\":\"mmproj-Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-f16.gguf\"},{\"name\":\"Qwen3.5-27B-heretic.mmproj-f16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-27B-heretic.mmproj-f16.gguf\",\"relative_path\":\"Qwen3.5-27B-heretic.mmproj-f16.gguf\"},{\"name\":\"Qwen3.5-27B-heretic.mmproj-Q8_0.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-27B-heretic.mmproj-Q8_0.gguf\",\"relative_path\":\"Qwen3.5-27B-heretic.mmproj-Q8_0.gguf\"},{\"name\":\"Qwen3.5-9B-mmproj-BF16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-mmproj-BF16.gguf\",\"relative_path\":\"Qwen3.5-9B-mmproj-BF16.gguf\"},{\"name\":\"Qwen3.5-9B-mmproj-F16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.5-9B-mmproj-F16.gguf\",\"relative_path\":\"Qwen3.5-9B-mmproj-F16.gguf\"},{\"name\":\"Qwen3.8-27B-mmproj-BF16.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/Qwen3.8-27B-mmproj-BF16.gguf\",\"relative_path\":\"Qwen3.8-27B-mmproj-BF16.gguf\"},{\"name\":\"ToriiGate-0.5-bf16.mmproj.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/ToriiGate-0.5-bf16.mmproj.gguf\",\"relative_path\":\"ToriiGate-0.5-bf16.mmproj.gguf\"},{\"name\":\"ToriiGate-0.5-Q8_0.mmproj.gguf\",\"path\":\"/workspace/ComfyUI/models/LLM/ToriiGate-0.5-Q8_0.mmproj.gguf\",\"relative_path\":\"ToriiGate-0.5-Q8_0.mmproj.gguf\"}],\"missing_dependencies\":[],\"gguf_dependency\":{\"available\":true,\"reason\":\"\",\"system\":\"Linux\",\"machine\":\"x86_64\",\"python_tag\":\"cp310\",\"cuda_tag\":\"cu130\",\"release_url\":\"https://github.com/JamePeng/llama-cpp-python/releases\",\"wheel_url\":\"\",\"wheel_name\":\"\",\"version\":\"0.3.46\"},\"provider_models\":{\"runninghub\":\"google/gemini-3.6-flash\",\"runninghub_overseas\":\"openai/gpt-5.6-sol\"}},\"optimizerCache\":{\"contextSignature\":\"{\\\"task\\\":\\\"Hybrid\\\",\\\"duration\\\":7,\\\"mode\\\":\\\"text_keyframes\\\",\\\"context\\\":{\\\"main_mode\\\":\\\"text_keyframes\\\",\\\"keyframes\\\":[{\\\"label\\\":\\\"<picture 1>\\\",\\\"role\\\":\\\"exact_first_frame\\\"}],\\\"audio_mode\\\":\\\"lock_source\\\"},\\\"media\\\":[[\\\"first_frame\\\",\\\"image\\\",\\\"<picture 1>\\\",\\\"d4b54ce243945f24e83944dd8818bd94d23271a704637c824dc111281fd6ee6b.png\\\",false],[\\\"hybrid_audio\\\",\\\"audio\\\",\\\"<audio 1>\\\",\\\"ee6db63656c66860a3eaaf9aa774ad334f1bffb212b68f8c01ceabf34d4a67f0.mp3\\\",false]],\\\"settings\\\":[\\\"api\\\",\\\"runninghub\\\",\\\"https://www.runninghub.cn/openapi/v2\\\",\\\"google/gemini-3.6-flash\\\",\\\"runninghub\\\",\\\"Huihui-Qwen3.8-27B-abliterated-Q4_K.gguf\\\",\\\"Qwen3.8-27B-mmproj-BF16.gguf\\\",\\\"cuda\\\",true,\\\"中文\\\"]}\",\"originalPrompt\":\"图1中的女子一边走路一边深情的唱着音频1中的歌曲，表情很伤心，情绪很丰富，搭配合适的闭眼动作\",\"result\":\"subject_definitions:\\n<Subject 1>: <picture 1>中的古装女子，身穿蓝白色华丽汉服，发型精致，容貌秀丽。\\n\\nsummary:\\n[keyframe completion, video continuation, audio reuse] 本视频承接<picture 1>的视觉画面，展示女子一边缓步前行一边深情演唱<audio 1>，表情伤感且伴随自然闭眼。\\n\\nretention_analysis:\\n<picture 1>: fully_preserved - 完整保留女子(S1)的外貌、服装发型样式及古风庭院背景。\\n<audio 1>: fully_copy - 原样保留音频信号作为视频的完整音频轨。\\n\\ndetailed_description:\\n[Shot 1] 镜头从<picture 1>开始，以中特写跟随女子(S1)。(S1)在古风庭院中沿着水畔缓步向前行走，一边深情演唱，唇形与嘴部动作与演唱完美同步，精准吻合音素变化与吐字。她的表情充满悲伤与深情，眼眶泛红，眉宇间流露出浓烈的情感。(S1)随着演唱节奏轻微摇晃身姿，手势配合歌词情感缓缓抬起，在演唱到高潮时自然地闭上双眼，感受歌曲中的伤感，随后微微睁开眼睛，眼神中流露出无尽的思念与落寞。镜头保持平稳跟拍，突出其丰富的面部表情与动人的表演，直到视频结束。\\n\\noverall_soundscape:\\n保留原视频音轨不变。\\n\\nnon_diegetic_music:\\n无非剧情音乐。\"},\"optimizerBefore\":\"图1中的女子一边走路一边深情的唱着音频1中的歌曲，表情很伤心，情绪很丰富，搭配合适的闭眼动作\",\"optimizerBeforeByMode\":{\"text_keyframes\":\"图1中的女子一边走路一边深情的唱着音频1中的歌曲，表情很伤心，情绪很丰富，搭配合适的闭眼动作\",\"all_reference\":null}}"
+        },
+        "class_type": "MiniMaxH3IntegrationGH",
+        "_meta": {
+          "title": "MiniMax-H3 智能一体化(GH)"
+        }
+      },
+      "187": {
+        "inputs": {
+          "step": 4,
+          "sigmas": [
+            "126",
+            2
+          ]
+        },
+        "class_type": "SplitSigmas",
+        "_meta": {
+          "title": "分离Sigma"
+        }
+      },
+      "207": {
+        "inputs": {
+          "frame_rate": 24,
+          "loop_count": 0,
+          "filename_prefix": "MiniMaxH3/二采",
+          "format": "video/h264-mp4",
+          "pix_fmt": "yuv420p",
+          "crf": 16,
+          "save_metadata": false,
+          "trim_to_audio": false,
+          "pingpong": false,
+          "save_output": [
+            "232",
+            1
+          ],
+          "images": [
+            "232",
+            0
+          ],
+          "audio": [
+            "102",
+            0
+          ]
+        },
+        "class_type": "VHS_VideoCombine",
+        "_meta": {
+          "title": "Video Combine 🎥🅥🅗🅢"
+        }
+      },
+      "208": {
+        "inputs": {
+          "av_latent": [
+            "210",
+            0
+          ],
+          "video_vae": [
+            "124",
+            2
+          ],
+          "audio_vae": [
+            "124",
+            3
+          ]
+        },
+        "class_type": "MiniMaxH3AVDecodeT8GH",
+        "_meta": {
+          "title": "MiniMax-H3解码-T8(GH)"
+        }
+      },
+      "210": {
+        "inputs": {
+          "enable_tiling": true,
+          "n_tiles": 2,
+          "tile_overlap": 128,
+          "refine_seams": false,
+          "refine_steps": 4,
+          "noise": [
+            "9",
+            0
+          ],
+          "guider": [
+            "8",
+            0
+          ],
+          "sampler": [
+            "126",
+            1
+          ],
+          "sigmas": [
+            "187",
+            1
+          ],
+          "latent_image": [
+            "244",
+            0
+          ]
+        },
+        "class_type": "GoohaiMinimaxH3TiledSampler",
+        "_meta": {
+          "title": "Minimax-H3二采分块采样器"
+        }
+      },
+      "227": {
+        "inputs": {},
+        "class_type": "忽略多组孤海",
+        "_meta": {
+          "title": "忽略多组 孤海"
+        }
+      },
+      "228": {
+        "inputs": {
+          "值": 2,
+          "output_type": "float",
+          "ghs_ui": null
+        },
+        "class_type": "GoohaiUniversalSlider",
+        "_meta": {
+          "title": "二采放大倍数"
+        }
+      },
+      "232": {
+        "inputs": {
+          "gh_input_type": "IMAGE",
+          "Any": [
+            "252",
+            0
+          ]
+        },
+        "class_type": "GoohaiAnyExists",
+        "_meta": {
+          "title": "万能是否存在(GH)"
+        }
+      },
+      "242": {
+        "inputs": {
+          "unet_name": "minimax/minimax_h3_ref2va_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        },
+        "class_type": "UNETLoader",
+        "_meta": {
+          "title": "UNet加载器"
+        }
+      },
+      "243": {
+        "inputs": {
+          "lora_name": "minimax/minimax_h3_turbo_4步加速_comfyui.safetensors",
+          "strength_model": 1,
+          "model": [
+            "253",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderBypassModelOnly",
+        "_meta": {
+          "title": "lora only"
+        }
+      },
+      "244": {
+        "inputs": {
+          "model_name": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+          "mode": "scale by multiplier",
+          "mode.scale": [
+            "228",
+            0
+          ],
+          "align": 32,
+          "force_unload": false,
+          "device": "cuda",
+          "precision": "fp16",
+          "av_latent": [
+            "10",
+            1
+          ]
+        },
+        "class_type": "GoohaiMinimaxH3LatentUpscalerGH",
+        "_meta": {
+          "title": "Minimax H3 Latent 分块放大 (GH)"
+        }
+      },
+      "252": {
+        "inputs": {
+          "temperature": 0,
+          "hue": 1,
+          "brightness": 0,
+          "contrast": -10,
+          "saturation": -10,
+          "gamma": 1,
+          "image": [
+            "208",
+            0
+          ]
+        },
+        "class_type": "ColorCorrect",
+        "_meta": {
+          "title": "Color Correct"
+        }
+      },
+      "253": {
+        "inputs": {
+          "unet_name": "minimax/FeiHou_MiniMax-H3_Remix_v0.6_int8_convrot.safetensors",
+          "weight_dtype": "default"
+        },
+        "class_type": "UNETLoader",
+        "_meta": {
+          "title": "UNet加载器"
+        }
+      },
+      "264": {
+        "inputs": {
+          "index": [
+            "124",
+            4
+          ],
+          "value0": [
+            "78",
+            0
+          ],
+          "value1": [
+            "242",
+            0
+          ]
+        },
+        "class_type": "easy anythingIndexSwitch",
+        "_meta": {
+          "title": "编号切换"
+        }
+      }
+    },
+    "ui_name": "U26 · MiniMax H3 孤海直连",
+    "summary": "U26 MiniMax H3 一体化工作流专用：节点185素材、音频、二采视频回传。"
+  },
+  {
+    "name": "U24 · 9图3音频 T8",
+    "workflow_id": "API-U24-文武双修T8版",
+    "workflow_template": {
+      "1": {
+        "inputs": {
+          "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+        },
+        "class_type": "VAELoader",
+        "_meta": {
+          "title": "H3 video VAE"
+        }
+      },
+      "2": {
+        "inputs": {
+          "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+        },
+        "class_type": "VAELoader",
+        "_meta": {
+          "title": "H3 audio VAE"
+        }
+      },
+      "3": {
+        "inputs": {
+          "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+          "type": "minimax",
+          "device": "default"
+        },
+        "class_type": "CLIPLoader",
+        "_meta": {
+          "title": "H3 CLIP"
+        }
+      },
+      "4": {
+        "inputs": {
+          "unet_name": "minimax/minimax_h3_hybrid_fl2va_ref2va_b25-49-int8.safetensors",
+          "weight_dtype": "default"
+        },
+        "class_type": "UNETLoader",
+        "_meta": {
+          "title": "H3 FL2VA"
+        }
+      },
+      "5": {
+        "inputs": {
+          "lora_name": "minimax/minimax_h3_fl2v_turbo_4step_v1.2_768p_comfyui_bf16.safetensors",
+          "strength_model": 1,
+          "model": [
+            "4",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderBypassModelOnly",
+        "_meta": {
+          "title": "LightX2V FL2V Turbo · corrected alpha8 · quantized-model bypass"
+        }
+      },
+      "8": {
+        "inputs": {
+          "steps": 8,
+          "shift_video": 12,
+          "shift_audio": 3,
+          "sampler_name": "dual_clock_euler",
+          "scheduler": "native_flow",
+          "model": [
+            "112",
+            0
+          ],
+          "av_latent": [
+            "95",
+            1
+          ]
+        },
+        "class_type": "MiniMaxH3DualClockSamplerT8",
+        "_meta": {
+          "title": "LOW upstream I2V sampler contract · shift 12/3"
+        }
+      },
+      "9": {
+        "inputs": {
+          "base_steps": 9,
+          "coarse_steps": 4,
+          "refine_steps": 5,
+          "model": [
+            "8",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3LearnedTwoPassParityPlanT8Advanced",
+        "_meta": {
+          "title": "Published LBH schedule · simple8 split4 + refine3"
+        }
+      },
+      "10": {
+        "inputs": {
+          "model": [
+            "8",
+            0
+          ],
+          "conditioning": [
+            "95",
+            0
+          ]
+        },
+        "class_type": "BasicGuider",
+        "_meta": {
+          "title": "LOW guider"
+        }
+      },
+      "11": {
+        "inputs": {
+          "noise_seed": 683072603085674
+        },
+        "class_type": "RandomNoise",
+        "_meta": {
+          "title": "LOW noise"
+        }
+      },
+      "12": {
+        "inputs": {
+          "noise": [
+            "11",
+            0
+          ],
+          "guider": [
+            "10",
+            0
+          ],
+          "sampler": [
+            "8",
+            1
+          ],
+          "sigmas": [
+            "9",
+            0
+          ],
+          "latent_image": [
+            "95",
+            1
+          ]
+        },
+        "class_type": "SamplerCustomAdvanced",
+        "_meta": {
+          "title": "PASS 1 - consume denoised_output"
+        }
+      },
+      "13": {
+        "inputs": {
+          "model_name": "minimax_h3_latent_upscaler_3d_fp16.safetensors",
+          "size_mode": "scale_by",
+          "scale_by": [
+            "54",
+            0
+          ],
+          "target_megapixels": 1,
+          "target_width": 1280,
+          "target_height": 704,
+          "aspect_policy": "preserve_source",
+          "max_anisotropy": 1.05,
+          "precision": "fp16",
+          "release_policy": "offload_after",
+          "av_latent": [
+            "12",
+            1
+          ]
+        },
+        "class_type": "MiniMaxH3LearnedLatentUpscaleT8Advanced",
+        "_meta": {
+          "title": "Upstream-default learned 3D latent upscale · 2x"
+        }
+      },
+      "15": {
+        "inputs": {
+          "audio_policy": "auto",
+          "second_pass_audio_source": "legacy_policy",
+          "second_pass_audio_strength": 0,
+          "learned_latent": [
+            "13",
+            0
+          ],
+          "highres_template": [
+            "96",
+            1
+          ],
+          "positive": [
+            "96",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3TwoPassLatentReconcileT8Advanced",
+        "_meta": {
+          "title": "Validate and reconcile HIGH contract"
+        }
+      },
+      "16": {
+        "inputs": {
+          "shift_video": 12,
+          "shift_audio": 3,
+          "enable_tail": false,
+          "extra_tail_steps": 1,
+          "tail_spacing": "video_sigma_linear",
+          "enable_model_time_bias": false,
+          "bias": -0.025,
+          "bias_start_progress": 0.7,
+          "bias_end_progress": 0.95,
+          "bias_domain": "video_sigma",
+          "enable_stg": false,
+          "stg_scale": 0.35,
+          "stg_double_blocks": "25",
+          "stg_start_progress": 0.25,
+          "stg_end_progress": 0.85,
+          "enable_restart": false,
+          "restart_video_sigma": 0.15,
+          "restart_steps": 3,
+          "restart_seed": 857785005933163,
+          "model": [
+            "113",
+            0
+          ],
+          "av_latent": [
+            "15",
+            0
+          ],
+          "refine_sigmas": [
+            "9",
+            1
+          ]
+        },
+        "class_type": "MiniMaxH3TwoPassDetailMixerT8Advanced",
+        "_meta": {
+          "title": "HIGH upstream refine · optional Tail/Bias/STG/Restart off by default"
+        }
+      },
+      "17": {
+        "inputs": {
+          "model": [
+            "16",
+            0
+          ],
+          "conditioning": [
+            "15",
+            1
+          ]
+        },
+        "class_type": "BasicGuider",
+        "_meta": {
+          "title": "HIGH guider"
+        }
+      },
+      "19": {
+        "inputs": {
+          "noise": [
+            "11",
+            0
+          ],
+          "guider": [
+            "17",
+            0
+          ],
+          "sampler": [
+            "16",
+            1
+          ],
+          "sigmas": [
+            "16",
+            2
+          ],
+          "latent_image": [
+            "15",
+            0
+          ]
+        },
+        "class_type": "SamplerCustomAdvanced",
+        "_meta": {
+          "title": "PASS 2 · decode output, not denoised_output"
+        }
+      },
+      "20": {
+        "inputs": {
+          "av_latent": [
+            "19",
+            0
+          ],
+          "video_vae": [
+            "1",
+            0
+          ],
+          "audio_vae": [
+            "2",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3AVDecodeT8",
+        "_meta": {
+          "title": "Decode HIGH AV"
+        }
+      },
+      "21": {
+        "inputs": {
+          "frame_rate": 24,
+          "loop_count": 0,
+          "filename_prefix": "comfyui",
+          "format": "video/h264-mp4",
+          "pix_fmt": "yuv420p",
+          "crf": 16,
+          "save_metadata": false,
+          "trim_to_audio": false,
+          "pingpong": false,
+          "save_output": true,
+          "images": [
+            "106",
+            0
+          ],
+          "audio": [
+            "20",
+            1
+          ]
+        },
+        "class_type": "VHS_VideoCombine",
+        "_meta": {
+          "title": "Save synchronized MP4"
+        }
+      },
+      "27": {
+        "inputs": {
+          "value": 15
+        },
+        "class_type": "PrimitiveFloat",
+        "_meta": {
+          "title": "Float (duration)"
+        },
+        "t": {
+          "title": "时长"
+        }
+      },
+      "28": {
+        "inputs": {
+          "prompt": "subject_definitions:\n- <Subject 1>: A cold-featured East Asian young female warrior with flawless pale skin, black straight bangs above her brows, and waist-length straight black hair with subtle dark teal tips. She wears a black high-gloss leather cropped jacket, black turtleneck base layer, pleated leather battle skirt with leg straps and bronze metal buckles, half-finger tactical gloves, and knee-high combat boots with dark red stitching. She wields a massive, heavy mechanical greatsword featuring a dark-gray armored spine, mechanical hydraulic joints, and razor-sharp silver edges. When activated, the sword's inner mechanics ignite into orange-white superheated thermal glow and compressed orange-gold energy.\n- <Subject 2>: An apocalyptic surrealist desert wasteland featuring sun-scorched earth, crumbling stone arch ruins, weathered utility poles, background wind turbines, volumetric dust clouds, and flying debris under hazy natural sunlight.\n- <Subject 3>: Global visual rendering style featuring Unreal Engine 5.4 Path Tracing aesthetic, Lumen global illumination, Nanite geometry detail, PBR physical material response with 35mm Kodak film grain, high-gloss leather highlights, metallic weathering, heat-wave air refraction, and 3-part hybrid combat effects (50% heavy sword compression shockwaves, 30% white-orange carbonization burn and ash, 20% sandstorm fluid dynamics with melted glass particles).\n- <Subject 4>: Superheated orange-white thermal explosion effects consisting of hyper-dense volumetric smoke, high-velocity molten sparks, floating glowing ash particles, expanding spherical sonic-boom shockwaves, heat-refracting air distortion ripples, and cascading magma-like fissure energy cracks.\n- <Subject 5>: Massive industrial mechanical quad-legged titan behemoth featuring heavily weathered red armor plates, exposed mechanical joints, massive dark hydraulic pistons, and a blinding, glowing orange-red molten energy reactor core embedded directly in its chest center.\n- <Subject 6>: Densely packed swarms of quadrupedal mechanical arachnid drone units with high-gloss dark steel and crimson-red armor plating, glowing red visor optics, articulated mechanical spider legs, low-slung aggressive swarm movement, and mounted high-frequency plasma micro-missile launchers firing dense torrents of glowing energy projectiles.\n\nsummary:\nAn expanded 17.5-second multi-shot combat sequence showcasing <Subject 1> weaving and slicing through overwhelmingly dense swarms of <Subject 6> and engaging <Subject 5> on <Subject 2>. The sequence features an intense barrage of enemy projectile fire, fluid weaving sword strikes, a side-profile glance as she snaps her fingers to initiate a delayed blanket explosion, and a titan showdown where she overcharges her blade, detonates the mech's core, and stands facing away into the horizon in 1.0x real-time speed. Paired with dynamic ambiental soundscapes, continuous heavy combat Foley, layered explosion booms, and an epic cinematic orchestra score.\n\nretention_analysis:\n<Subject 1> maintains her facial structure, pale skin, black bangs with teal hair tips, black leather tactical battle attire, and orange-white superheated mechanical greatsword across all 35 shots. <Subject 2> preserves the desert ruins, wind turbines, sand dunes, and dust haze. <Subject 3> ensures consistent UE5.4 Path Tracing CG aesthetic, PBR materials, and 3-part energy physics. <Subject 4> retains the fiery thermal explosion physics. <Subject 5> reflects the red armored mechanical titan with its chest reactor. <Subject 6> maintains the quadrupedal mechanical red arachnid drone swarm with enhanced projectile barrage capabilities.\n\ndetailed_description:\nThe target video is a 17.5-second high-pacing combat sequence consisting of 35 rapid cinematic shot cuts rendered in raw 1.0x real-time speed with dynamic camera moves, 3-part hybrid energy trails, high shutter clarity, heat-wave refraction, and zero slow-motion.\n\n[Shot 01] (00:00.000 - 00:00.500): Extreme low-angle tracking shot of <Subject 1> sliding across sun-scorched sand, dragging her greatsword, leaving a deep furrow of melted glass particles while dodging incoming plasma projectile trails from <Subject 6>.\n[Shot 02] (00:00.500 - 00:01.000): Medium side shot of <Subject 1> sprinting through desert haze, weaving dynamically between hundreds of swarming arachnid drones of <Subject 6> as plasma bursts detonate around her feet.\n[Shot 03] (00:01.000 - 00:01.500): Dynamic wide tracking shot as she swings a 50% super-compressed fan-shaped orange-gold arc, slicing through a dense cluster of mechanical drones of <Subject 6>.\n[Shot 04] (00:01.500 - 00:02.000): Low-angle camera tracking behind <Subject 1> weaving right and left through endless rows of crawling drones on <Subject 2>, parrying close-range plasma fire with her heavy blade.\n[Shot 05] (00:02.000 - 00:02.500): Center close-up on <Subject 1> leaping through a dense barrage of heat-refracting thermal projectiles, her leather jacket gleaming under <Subject 3>.\n[Shot 06] (00:02.500 - 00:03.000): Low-angle view looking up as she soars high into the sky, holding her glowing mechanical greatsword with both hands above the incoming missile streams.\n[Shot 07] (00:03.000 - 00:03.500): Low tracking shot of <Subject 1> landing directly in the center of the dense drone swarm, unleashing a 360-degree whirlwind flame slash that shreds dozens of surrounding red armor units into flying embers.\n[Shot 08] (00:03.500 - 00:04.000): Skyward camera view of <Subject 1> suspended at the apex of a second leap, raising her superheated sword as orange-white hydraulic mechanisms pump furiously.\n[Shot 09] (00:04.000 - 00:04.500): High-angle crane shot looking down as a massive vertical beam of golden compressed sword qi slams into the desert floor, vaporizing a giant wave of oncoming arachnid drones.\n[Shot 10] (00:04.500 - 00:05.000): Low-angle centered shot of <Subject 1> planting her sword into a cracked, glowing seal on the ground, sending high-pressure thermal shockwaves tearing through the front line of <Subject 6>.\n[Shot 11] (00:05.000 - 00:05.500): Fast-paced over-the-shoulder tracking shot as <Subject 1> dashes deep into the thickest part of <Subject 6>, slicing metal legs and deflective hulls with rapid low-cleave strikes.\n[Shot 12] (00:05.500 - 00:06.000): High-speed side tracking shot following <Subject 1> zig-zagging fluidly between massive waves of mechanical spider units while continuous plasma artillery blasts explode in her wake.\n[Shot 13] (00:06.000 - 00:06.500): Mid-shot vaulting off the back of an armored drone, deflecting three high-velocity energy projectiles in mid-air with the broadside of her glowing blade.\n[Shot 14] (00:06.500 - 00:07.000): Cinematic profile medium shot: camera pans tightly to her side as <Subject 1> turns her head looking backward over her shoulder (side-profile glance), her sharp eyes glinting cold and expressionless as her gloved hand executes a crisp finger snap.\n[Shot 15] (00:07.000 - 00:07.500): Ultra-wide shockwave shot: a brief beat after her finger snap, an overcharged thermal chain-reaction triggers across the entire swarm field, detonating all surrounding mechanical drones of <Subject 6> into a vast ocean of massive fireballs.\n[Shot 16] (00:07.500 - 00:08.000): Full-body front tracking shot as <Subject 1> walks forward calmly past the erupting explosion cloud, her teal-tipped hair fluttering as she drags her glowing greatsword along the sand.\n[Shot 17] (00:08.000 - 00:08.500): Wide shot with <Subject 1> walking forward as a giant cloud of volumetric smoke and sand settles over distant wind turbines.\n[Shot 18] (00:08.500 - 00:09.000): Rear wide shot looking toward crumbling stone arch ruins on <Subject 2> as heavy mechanical thuds shake the desert ground.\n[Shot 19] (00:09.000 - 00:09.500): Low-angle wide shot as the red mechanical titan behemoth of <Subject 5> steps forward with massive hydraulic legs, crushing dust and rock beneath it.\n[Shot 20] (00:09.500 - 00:10.000): Low-angle shot behind <Subject 1> readies her sword as hydraulic gears glow and sparks flare from her blade edges.\n[Shot 21] (00:10.000 - 00:10.500): Over-the-shoulder view of <Subject 1> standing defiant as the glowing orange chest reactor of <Subject 5> looms directly above her.\n[Shot 22] (00:10.500 - 00:11.000): Low-angle view looking past <Subject 1> as <Subject 5> slams down a giant red mechanical limb, sending a massive cloud of sand blasting into the frame.\n[Shot 23] (00:11.000 - 00:11.500): Rear low shot as <Subject 1> activates a glowing orange shield barrier to absorb and deflect the massive mechanical fist impact of <Subject 5>.\n[Shot 24] (00:11.500 - 00:12.000): Ultra-low tracking shot following <Subject 1> sliding under the quad-legged chassis of <Subject 5>, dragging her trailing superheated blade with intense heat refraction.\n[Shot 25] (00:12.000 - 00:12.500): Fast dolly shot under the red armored underbelly of <Subject 5> as <Subject 1> shoots past at extreme speed, leaving a glowing thermal trail on the desert sand.\n[Shot 26] (00:12.500 - 00:13.000): Close-up shot of the glowing molten chest reactor of <Subject 5> pulsing furiously and tracking her position.\n[Shot 27] (00:13.000 - 00:13.500): Low side shot of <Subject 1> sliding on the sand and pivoting her leather boots to regain firm footing.\n[Shot 28] (00:13.500 - 00:14.000): Low-angle shot from behind as <Subject 1> leaps high toward the glowing orange core in the chest of <Subject 5>.\n[Shot 29] (00:14.000 - 00:14.500): High-angle shot as she drives her raised greatsword straight down into the chest core of <Subject 5>, creating white-orange burn scars that spread across its red armor plating.\n[Shot 30] (00:14.500 - 00:15.000): Extreme close-up of the greatsword embedding deep into the central energy core of <Subject 5>; <Subject 1> pulls the trigger mechanism on the handle, forcing internal hydraulic pumps to inject superheated thermal energy into the core.\n[Shot 31] (00:15.000 - 00:15.500): Low-angle upward shot as blinding white-orange power surges violently through the red armor seams of <Subject 5>, causing high-pressure plasma vents to blow off exterior metal plates.\n[Shot 32] (00:15.500 - 00:16.000): Tracking shot of <Subject 1> vaulting backward off the exploding chest chassis of <Subject 5>, performing a mid-air backflip through <Subject 4> with her black leather jacket and hair fluttering amidst flying armor fragments.\n[Shot 33] (00:16.000 - 00:16.500): Wide shockwave shot as the chest reactor core of <Subject 5> completely detonates into <Subject 4>, generating a massive 360-degree spherical ring of super-heated air that vaporizes surrounding rock ruins into dust.\n[Shot 34] (00:16.500 - 00:17.000): Low-angle wide establishing shot as the massive red mechanical frame of <Subject 5> collapses forward, cracking into glowing carbonized metal wreckage and hot ash clouds on the desert sand.\n[Shot 35] (00:17.000 - 00:17.500): Low-angle rear view focusing on <Subject 1> standing with her back turned to the camera, her black leather jacket and teal-tipped hair swaying gently in the desert breeze; she rests her greatsword as its superheated edge gradually cools down to dark steel, facing away into the desolate horizon while ash and smoke fall around her under <Subject 3>.\n\noverall_soundscape:\n- Diegetic Sound & Foley: Deep hydraulic mechanical clicks, sharp metallic sword unsheathing rings, crisp leather jacket movement rustles, heavy combat boot footfalls on sand and crushed rock, high-velocity plasma projectile whistling, metallic blade deflections, mechanical drone limb snapping, high-pressure hydraulic gear whining, and a sharp glove finger-snap click.\n- Explosions & Impact Sound Effects: Continuous low-frequency ground-shattering plasma explosions, high-energy thermal sizzle, massive multi-stage delayed chain-reaction explosion booms, supersonic shockwave crackles, tearing metal armor plates, high-velocity thermal core energy injection hiss, mega-reactor detonation blast reverberation, and deep bass sub-woofers accompanying collapsing titan metal debris.\n- Environmental Audio: Low howling desert wind dynamics, sandstorm grain whistling, crackling air heat distortion, falling hot ash debris drops, crumbling stone masonry reverberations, and distant wind turbine hums echoing across the open wasteland.\n\nnon_diegetic_music:\nHigh-tempo cinematic battle soundtrack featuring fast aggressive hybrid orchestral percussion, driving industrial synth brass, frantic rhythmic taiko drums, rising sub-bass drops, and sharp high-tension string ostinatos that swell continuously during the drone swarm combat, drop to a brief sudden muted silence at the finger snap (00:06.800), explode into an immense bass drop for the mega detonation, and conclude with an epic, low-pitched melancholic brass motif as the titan falls."
+        },
+        "class_type": "CR Prompt Text",
+        "_meta": {
+          "title": "⚙️ CR Prompt Text"
+        }
+      },
+      "29": {
+        "inputs": {
+          "aspect_ratio": "16:9 (Widescreen)",
+          "megapixels": 0.4,
+          "multiple": 32
+        },
+        "class_type": "ResolutionSelector",
+        "_meta": {
+          "title": "分辨率选择器"
+        },
+        "t": {
+          "title": "1采分辨率默认0.4太高会失败"
+        }
+      },
+      "30": {
+        "inputs": {
+          "expression": "max(5, round(a * 24)) + (5 - (max(5, round(a * 24)) % 17)) % 17",
+          "values.a": [
+            "27",
+            0
+          ]
+        },
+        "class_type": "ComfyMathExpression",
+        "_meta": {
+          "title": "数学表达式"
+        }
+      },
+      "32": {
+        "inputs": {
+          "model": [
+            "5",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3MemoryEfficientSageAttentionPatch",
+        "_meta": {
+          "title": "MiniMax H3 Mem Eff Sage Attention Patch"
+        }
+      },
+      "33": {
+        "inputs": {
+          "attention": "pytorch attention",
+          "model": [
+            "32",
+            0
+          ]
+        },
+        "class_type": "ModelAttentionBackend",
+        "_meta": {
+          "title": "ModelAttentionBackend"
+        }
+      },
+      "44": {
+        "inputs": {
+          "lora_name": "minimax/minimax_h3_turbo_4step_10ErosMax_test4_pruned_curveproj1025_exp_v001-T8.safetensors",
+          "strength_model": 0.7000000000000002,
+          "model": [
+            "47",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "45": {
+        "inputs": {
+          "lora_name": "minimax/Motion_Repair.safetensors",
+          "strength_model": 0.7000000000000002,
+          "model": [
+            "50",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "46": {
+        "inputs": {
+          "lora_name": "minimax/Motion_Repair.safetensors",
+          "strength_model": 0.20000000000000004,
+          "model": [
+            "44",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "47": {
+        "inputs": {
+          "lora_name": "minimax/minimax_h3_turbo_v4_step600_ema_DasiwaREF2VAHybridV1_0_curveproj1025_compat_v001.safetensors",
+          "strength_model": 0.5000000000000001,
+          "model": [
+            "53",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderBypassModelOnly",
+        "_meta": {
+          "title": "LightX2V FL2V Turbo · corrected alpha8 · quantized-model bypass"
+        }
+      },
+      "48": {
+        "inputs": {
+          "lora_name": "minimax/MinimaxH3真实电影质感V0.1.safetensors",
+          "strength_model": 0.5000000000000001,
+          "model": [
+            "45",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "49": {
+        "inputs": {
+          "lora_name": "minimax/MinimaxH3真实电影质感V0.1.safetensors",
+          "strength_model": 0.20000000000000004,
+          "model": [
+            "46",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "50": {
+        "inputs": {
+          "lora_name": "minimax/minimax_h3_turbo_4step_10ErosMax_test4_pruned_curveproj1025_exp_v001-T8.safetensors",
+          "strength_model": 0.5000000000000001,
+          "model": [
+            "51",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "51": {
+        "inputs": {
+          "lora_name": "minimax/minimax_h3_turbo_v4_step600_ema_DasiwaREF2VAHybridV1_0_curveproj1025_compat_v001.safetensors",
+          "strength_model": 0.9000000000000001,
+          "model": [
+            "52",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderBypassModelOnly",
+        "_meta": {
+          "title": "LightX2V FL2V Turbo · corrected alpha8 · quantized-model bypass"
+        }
+      },
+      "52": {
+        "inputs": {
+          "lora_name": "minimax/H3_Combat_V2.safetensors",
+          "strength_model": 0.7000000000000002,
+          "model": [
+            "33",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "53": {
+        "inputs": {
+          "lora_name": "minimax/H3_Combat_V2.safetensors",
+          "strength_model": 0.4900000000000001,
+          "model": [
+            "33",
+            0
+          ]
+        },
+        "class_type": "LoraLoaderModelOnly",
+        "_meta": {
+          "title": "LoRA加载器（仅模型）"
+        }
+      },
+      "54": {
+        "inputs": {
+          "value": 1.5
+        },
+        "class_type": "PrimitiveFloat",
+        "_meta": {
+          "title": "2采放大倍率"
+        },
+        "t": {
+          "title": "2采倍率"
+        }
+      },
+      "58": {
+        "inputs": {
+          "image": "3.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像3"
+        }
+      },
+      "59": {
+        "inputs": {
+          "image": "autodl-gptimg2-i2i-20260902-00-44-jfl88.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像4"
+        }
+      },
+      "60": {
+        "inputs": {
+          "image": "a_r2c2_04.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像5"
+        }
+      },
+      "61": {
+        "inputs": {
+          "image": "b_r3c2_06.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像6"
+        }
+      },
+      "62": {
+        "inputs": {
+          "image": "b_r4c1_07.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像7"
+        }
+      },
+      "63": {
+        "inputs": {
+          "image": "b_r4c2_08.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像8"
+        }
+      },
+      "64": {
+        "inputs": {
+          "image": "zealman-blank-image.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像9"
+        }
+      },
+      "65": {
+        "inputs": {
+          "image": "b_r1c2_02.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像2"
+        }
+      },
+      "66": {
+        "inputs": {
+          "image": "1.png"
+        },
+        "class_type": "LoadImage",
+        "_meta": {
+          "title": "加载图像1"
+        }
+      },
+      "95": {
+        "inputs": {
+          "prompt": [
+            "28",
+            0
+          ],
+          "width": [
+            "29",
+            0
+          ],
+          "height": [
+            "29",
+            1
+          ],
+          "length": [
+            "30",
+            1
+          ],
+          "task_type": "Ref2VA",
+          "audio_mode": "native",
+          "audio_denoise_strength": 1,
+          "add_source_as_reference": false,
+          "prompt_primary_audio_ordinal": 0,
+          "strict_prompt_tags": true,
+          "ref_image_size": "match",
+          "reference_video_policy": "official_2_to_15s",
+          "allow_above_reference_area": false,
+          "clip": [
+            "3",
+            0
+          ],
+          "video_vae": [
+            "1",
+            0
+          ],
+          "audio_vae": [
+            "2",
+            0
+          ],
+          "ref_images.ref_image_0": [
+            "66",
+            0
+          ],
+          "ref_images.ref_image_1": [
+            "65",
+            0
+          ],
+          "ref_images.ref_image_2": [
+            "58",
+            0
+          ],
+          "ref_images.ref_image_3": [
+            "59",
+            0
+          ],
+          "ref_images.ref_image_4": [
+            "60",
+            0
+          ],
+          "ref_images.ref_image_5": [
+            "61",
+            0
+          ],
+          "ref_images.ref_image_6": [
+            "62",
+            0
+          ],
+          "ref_images.ref_image_7": [
+            "63",
+            0
+          ],
+          "ref_images.ref_image_8": [
+            "64",
+            0
+          ],
+          "ref_audios.ref_audio_0": [
+            "107",
+            0
+          ],
+          "ref_audios.ref_audio_1": [
+            "108",
+            0
+          ],
+          "ref_audios.ref_audio_2": [
+            "109",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3AudioConditioningT8",
+        "_meta": {
+          "title": "LOW Conditioning 736x416"
+        }
+      },
+      "96": {
+        "inputs": {
+          "prompt": [
+            "28",
+            0
+          ],
+          "width": [
+            "13",
+            1
+          ],
+          "height": [
+            "13",
+            2
+          ],
+          "length": [
+            "30",
+            1
+          ],
+          "task_type": "Ref2VA",
+          "audio_mode": "native",
+          "audio_denoise_strength": 1,
+          "add_source_as_reference": false,
+          "prompt_primary_audio_ordinal": 0,
+          "strict_prompt_tags": true,
+          "ref_image_size": "match",
+          "reference_video_policy": "official_2_to_15s",
+          "allow_above_reference_area": false,
+          "clip": [
+            "3",
+            0
+          ],
+          "video_vae": [
+            "1",
+            0
+          ],
+          "audio_vae": [
+            "2",
+            0
+          ],
+          "ref_images.ref_image_0": [
+            "66",
+            0
+          ],
+          "ref_images.ref_image_1": [
+            "65",
+            0
+          ],
+          "ref_images.ref_image_2": [
+            "58",
+            0
+          ],
+          "ref_images.ref_image_3": [
+            "59",
+            0
+          ],
+          "ref_images.ref_image_4": [
+            "60",
+            0
+          ],
+          "ref_images.ref_image_5": [
+            "61",
+            0
+          ],
+          "ref_images.ref_image_6": [
+            "62",
+            0
+          ],
+          "ref_images.ref_image_7": [
+            "63",
+            0
+          ],
+          "ref_images.ref_image_8": [
+            "64",
+            0
+          ],
+          "ref_audios.ref_audio_0": [
+            "107",
+            0
+          ],
+          "ref_audios.ref_audio_1": [
+            "108",
+            0
+          ],
+          "ref_audios.ref_audio_2": [
+            "109",
+            0
+          ]
+        },
+        "class_type": "MiniMaxH3AudioConditioningT8",
+        "_meta": {
+          "title": "HIGH Conditioning · width/height auto-linked from upscaler"
+        }
+      },
+      "106": {
+        "inputs": {
+          "offload_model": true,
+          "offload_cache": true,
+          "anything": [
+            "20",
+            0
+          ]
+        },
+        "class_type": "VRAMCleanup",
+        "_meta": {
+          "title": "🎈VRAM-Cleanup"
+        }
+      },
+      "107": {
+        "inputs": {
+          "audio": "1.mp3",
+          "start_time": 0,
+          "duration": 10
+        },
+        "class_type": "VHS_LoadAudioUpload",
+        "_meta": {
+          "title": "Load Audio (Upload)🎥🅥🅗🅢"
+        }
+      },
+      "108": {
+        "inputs": {
+          "audio": "2.mp3",
+          "start_time": 0,
+          "duration": 10
+        },
+        "class_type": "VHS_LoadAudioUpload",
+        "_meta": {
+          "title": "Load Audio (Upload)🎥🅥🅗🅢"
+        }
+      },
+      "109": {
+        "inputs": {
+          "audio": "2.mp3",
+          "start_time": 0,
+          "duration": 10
+        },
+        "class_type": "VHS_LoadAudioUpload",
+        "_meta": {
+          "title": "Load Audio (Upload)🎥🅥🅗🅢"
+        }
+      },
+      "112": {
+        "inputs": {
+          "max_resolution": 1024,
+          "jpeg_quality": 80,
+          "suppress_default_preview": true,
+          "preview_frames": [
+            "30",
+            1
+          ],
+          "preview_fps": 12,
+          "tiny_vae": "taeh3.safetensors",
+          "model": [
+            "48",
+            0
+          ]
+        },
+        "class_type": "ModelPreviewOverrideKJ",
+        "_meta": {
+          "title": "Model Preview Override"
+        }
+      },
+      "113": {
+        "inputs": {
+          "max_resolution": 1024,
+          "jpeg_quality": 80,
+          "suppress_default_preview": true,
+          "preview_frames": [
+            "30",
+            1
+          ],
+          "preview_fps": 12,
+          "tiny_vae": "taeh3.safetensors",
+          "model": [
+            "49",
+            0
+          ]
+        },
+        "class_type": "ModelPreviewOverrideKJ",
+        "_meta": {
+          "title": "Model Preview Override"
+        }
+      }
+    },
+    "prompt_key": "28:prompt",
+    "negative_prompt_key": "",
+    "width_key": "",
+    "height_key": "",
+    "seed_key": "11:noise_seed",
+    "seed_value": 683072603085674,
+    "randomize_seed": false,
+    "output_width": 1280,
+    "output_height": 720,
+    "image_input_mappings": [
+      {
+        "key": "66:image",
+        "source": "图1"
+      },
+      {
+        "key": "65:image",
+        "source": "图2"
+      },
+      {
+        "key": "58:image",
+        "source": "图3"
+      },
+      {
+        "key": "59:image",
+        "source": "图4"
+      },
+      {
+        "key": "60:image",
+        "source": "图5"
+      },
+      {
+        "key": "61:image",
+        "source": "图6"
+      },
+      {
+        "key": "62:image",
+        "source": "图7"
+      },
+      {
+        "key": "63:image",
+        "source": "图8"
+      },
+      {
+        "key": "64:image",
+        "source": "图9"
+      }
+    ],
+    "video_input_mappings": [],
+    "audio_input_mappings": [
+      {
+        "key": "107:audio",
+        "source": "音频1"
+      },
+      {
+        "key": "108:audio",
+        "source": "音频2"
+      },
+      {
+        "key": "109:audio",
+        "source": "音频3"
+      }
+    ],
+    "reference_label_prefix": true,
+    "custom_input_values": [
+      {
+        "key": "27:value",
+        "value": 5,
+        "label": "时长(秒)",
+        "type": "select",
+        "options": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "key": "29:aspect_ratio",
+        "value": "16:9 (Widescreen)",
+        "label": "1采宽高比",
+        "type": "select",
+        "options": [
+          "1:1 (Square)",
+          "2:3 (Portrait Photo)",
+          "3:2 (Photo)",
+          "3:4 (Portrait Standard)",
+          "4:3 (Standard)",
+          "9:16 (Portrait Widescreen)",
+          "16:9 (Widescreen)",
+          "21:9 (Ultrawide)"
+        ]
+      },
+      {
+        "key": "29:megapixels",
+        "value": 0.4,
+        "label": "1采百万像素",
+        "type": "number",
+        "min": 0.2,
+        "max": 1.2,
+        "step": 0.1
+      },
+      {
+        "key": "54:value",
+        "value": 1.5,
+        "label": "2采放大倍率",
+        "type": "number",
+        "min": 1,
+        "max": 3,
+        "step": 0.1
+      }
+    ],
+    "fixed_input_values": {}
+  }
+]

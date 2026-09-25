@@ -1,0 +1,2552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>zealman-视频插件 粟粟修改</title>
+  <link rel="stylesheet" href="../../../plugin-sdk.css">
+  <style>
+    .mono-input {
+      font-family: ui-monospace, monospace;
+      font-size: 12px;
+    }
+    .section-title {
+      font-size: 12px;
+      color: var(--text-muted, #999);
+      margin: 12px 0 6px;
+      font-weight: 600;
+    }
+    .section-title-row .form-label {
+      display: none;
+    }
+    .form-label {
+      width: 116px;
+      min-width: 116px;
+      max-width: 116px;
+    }
+    .form-label.form-label-stacked {
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      align-self: flex-start;
+      line-height: 1.35;
+      padding-top: 6px;
+    }
+    .pair-row {
+      display: flex;
+      align-items: stretch;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .mono-input,
+    .form-control select {
+      border-radius: 6px;
+      box-sizing: border-box;
+      padding: 6px 10px;
+    }
+    .form-control > .mono-input {
+      width: 100%;
+    }
+    .pair-row .mono-input,
+    .pair-row select {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .mini-btn {
+      flex: 0 0 auto;
+      padding: 5px 12px;
+      font-size: 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: 1px solid rgba(120, 120, 140, 0.45);
+      background: rgba(120, 120, 140, 0.12);
+      color: inherit;
+    }
+    .mini-btn:active {
+      opacity: 0.85;
+    }
+
+    /* zealman 面板地址：蓝色强调 */
+    input.mono-input.tone-panel {
+      background: rgba(59, 130, 246, 0.14) !important;
+      border: 1px solid rgba(37, 99, 235, 0.5) !important;
+      color: #dbeafe !important;
+    }
+    input.mono-input.tone-panel::placeholder {
+      color: rgba(219, 234, 254, 0.5) !important;
+    }
+    /* plugin-sdk 里 input[type=text|number] 特异性更高；文字与占位符用同色系亮色 */
+    input.mono-input.tone-url {
+      background: rgba(100, 116, 139, 0.11) !important;
+      border: 1px solid rgba(100, 116, 139, 0.38) !important;
+      color: #e2e8f0 !important;
+    }
+    input.mono-input.tone-url::placeholder {
+      color: rgba(226, 232, 240, 0.45) !important;
+    }
+    input.mono-input.tone-workflow {
+      background: rgba(124, 58, 237, 0.09) !important;
+      border: 1px solid rgba(124, 58, 237, 0.35) !important;
+      color: #ede9fe !important;
+    }
+    input.mono-input.tone-workflow::placeholder {
+      color: rgba(237, 233, 254, 0.45) !important;
+    }
+    input.mono-input.tone-prompt-pos {
+      background: rgba(74, 222, 128, 0.2) !important;
+      border: 1px solid rgba(34, 197, 94, 0.5) !important;
+      color: #dcfce7 !important;
+    }
+    input.mono-input.tone-prompt-pos::placeholder {
+      color: rgba(220, 252, 231, 0.45) !important;
+    }
+    input.mono-input.tone-prompt-neg {
+      background: rgba(252, 165, 165, 0.22) !important;
+      border: 1px solid rgba(239, 68, 68, 0.48) !important;
+      color: #ffe4e6 !important;
+    }
+    input.mono-input.tone-prompt-neg::placeholder {
+      color: rgba(255, 228, 230, 0.45) !important;
+    }
+    input.mono-input.tone-timing {
+      background: rgba(139, 92, 246, 0.09) !important;
+      border: 1px solid rgba(139, 92, 246, 0.35) !important;
+      color: #ede9fe !important;
+    }
+    input.mono-input.tone-timing::placeholder {
+      color: rgba(237, 233, 254, 0.4) !important;
+    }
+    .tone-custom input.mono-input {
+      background: rgba(59, 130, 246, 0.09) !important;
+      border: 1px solid rgba(37, 99, 235, 0.38) !important;
+      color: #dbeafe !important;
+    }
+    .tone-custom input.mono-input::placeholder {
+      color: rgba(219, 234, 254, 0.45) !important;
+    }
+
+    .pair-row.tone-width input.mono-input {
+      background: rgba(6, 182, 212, 0.12) !important;
+      border: 1px solid rgba(8, 145, 178, 0.42) !important;
+      color: #cffafe !important;
+    }
+    .pair-row.tone-width input.mono-input::placeholder {
+      color: rgba(207, 250, 254, 0.45) !important;
+    }
+    .pair-row.tone-height input.mono-input {
+      background: rgba(251, 146, 60, 0.12) !important;
+      border: 1px solid rgba(234, 88, 12, 0.4) !important;
+      color: #ffedd5 !important;
+    }
+    .pair-row.tone-height input.mono-input::placeholder {
+      color: rgba(255, 237, 213, 0.45) !important;
+    }
+    .pair-row.tone-seed input.mono-input {
+      background: rgba(250, 204, 21, 0.16) !important;
+      border: 1px solid rgba(202, 138, 4, 0.45) !important;
+      color: #fef9c3 !important;
+    }
+    .pair-row.tone-seed input.mono-input::placeholder {
+      color: rgba(254, 249, 195, 0.45) !important;
+    }
+    /* 用宽度键名的青蓝色统一渲染：正向提示词键名、高度键名输入框 */
+    input.mono-input.tone-width-key,
+    .pair-row input.mono-input.tone-width-key {
+      background: rgba(6, 182, 212, 0.12) !important;
+      border: 1px solid rgba(8, 145, 178, 0.42) !important;
+      color: #cffafe !important;
+    }
+    input.mono-input.tone-width-key::placeholder,
+    .pair-row input.mono-input.tone-width-key::placeholder {
+      color: rgba(207, 250, 254, 0.45) !important;
+    }
+
+    .pair-row.tone-img-slot-1 input.mono-input {
+      background: rgba(99, 102, 241, 0.11) !important;
+      border: 1px solid rgba(79, 70, 229, 0.38) !important;
+      color: #e0e7ff !important;
+    }
+    .pair-row.tone-img-slot-1 input.mono-input::placeholder {
+      color: rgba(224, 231, 255, 0.45) !important;
+    }
+    .pair-row.tone-img-slot-1 select {
+      background-color: rgba(99, 102, 241, 0.11) !important;
+      border: 1px solid rgba(79, 70, 229, 0.38) !important;
+      color: #e0e7ff !important;
+    }
+    .pair-row.tone-img-slot-2 input.mono-input {
+      background: rgba(168, 85, 247, 0.11) !important;
+      border: 1px solid rgba(147, 51, 234, 0.35) !important;
+      color: #f3e8ff !important;
+    }
+    .pair-row.tone-img-slot-2 input.mono-input::placeholder {
+      color: rgba(243, 232, 255, 0.45) !important;
+    }
+    .pair-row.tone-img-slot-2 select {
+      background-color: rgba(168, 85, 247, 0.11) !important;
+      border: 1px solid rgba(147, 51, 234, 0.35) !important;
+      color: #f3e8ff !important;
+    }
+    .pair-row.tone-img-slot-3 input.mono-input {
+      background: rgba(56, 189, 248, 0.12) !important;
+      border: 1px solid rgba(14, 165, 233, 0.4) !important;
+      color: #e0f2fe !important;
+    }
+    .pair-row.tone-img-slot-3 input.mono-input::placeholder {
+      color: rgba(224, 242, 254, 0.45) !important;
+    }
+    .pair-row.tone-img-slot-3 select {
+      background-color: rgba(56, 189, 248, 0.12) !important;
+      border: 1px solid rgba(14, 165, 233, 0.4) !important;
+      color: #e0f2fe !important;
+    }
+    .pair-row.tone-img-slot-4 input.mono-input {
+      background: rgba(232, 121, 249, 0.12) !important;
+      border: 1px solid rgba(217, 70, 239, 0.38) !important;
+      color: #fae8ff !important;
+    }
+    .pair-row.tone-img-slot-4 input.mono-input::placeholder {
+      color: rgba(250, 232, 255, 0.45) !important;
+    }
+    .pair-row.tone-img-slot-4 select {
+      background-color: rgba(232, 121, 249, 0.12) !important;
+      border: 1px solid rgba(217, 70, 239, 0.38) !important;
+      color: #fae8ff !important;
+    }
+    .pair-row.tone-img-slot-5 input.mono-input {
+      background: rgba(34, 211, 238, 0.12) !important;
+      border: 1px solid rgba(6, 182, 212, 0.42) !important;
+      color: #cffafe !important;
+    }
+    .pair-row.tone-img-slot-5 input.mono-input::placeholder {
+      color: rgba(207, 250, 254, 0.45) !important;
+    }
+    .pair-row.tone-img-slot-5 select {
+      background-color: rgba(34, 211, 238, 0.12) !important;
+      border: 1px solid rgba(6, 182, 212, 0.42) !important;
+      color: #cffafe !important;
+    }
+    .pair-row.tone-video-slot input.mono-input {
+      background: rgba(59, 130, 246, 0.12) !important;
+      border: 1px solid rgba(37, 99, 235, 0.42) !important;
+      color: #dbeafe !important;
+    }
+    .pair-row.tone-video-slot input.mono-input::placeholder {
+      color: rgba(219, 234, 254, 0.45) !important;
+    }
+    .pair-row.tone-video-slot select {
+      background-color: rgba(59, 130, 246, 0.12) !important;
+      border: 1px solid rgba(37, 99, 235, 0.42) !important;
+      color: #dbeafe !important;
+    }
+    .pair-row.tone-audio-slot input.mono-input {
+      background: rgba(217, 119, 6, 0.12) !important;
+      border: 1px solid rgba(180, 83, 9, 0.45) !important;
+      color: #fef3c7 !important;
+    }
+    .pair-row.tone-audio-slot input.mono-input::placeholder {
+      color: rgba(254, 243, 199, 0.45) !important;
+    }
+    .pair-row.tone-audio-slot select {
+      background-color: rgba(217, 119, 6, 0.12) !important;
+      border: 1px solid rgba(180, 83, 9, 0.45) !important;
+      color: #fef3c7 !important;
+    }
+    /* ── 面板地址池：多个地址会在并发任务间分摊 ── */
+    .server-input-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: 100%;
+    }
+    .server-input-group input.mono-input {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+    .server-status {
+      flex: 0 0 auto;
+      height: 30px;
+      min-width: 44px;
+      padding: 0 7px;
+      border-radius: 6px;
+      font-size: 11px;
+      cursor: pointer;
+      border: 1px solid rgba(120, 120, 140, 0.45);
+      background: rgba(120, 120, 140, 0.12);
+      color: var(--text-secondary, #aaa);
+    }
+    .server-status.status-green {
+      border-color: rgba(34, 197, 94, 0.75);
+      background: rgba(34, 197, 94, 0.14);
+      color: #bbf7d0;
+    }
+    .server-status.status-yellow {
+      border-color: rgba(250, 204, 21, 0.75);
+      background: rgba(250, 204, 21, 0.14);
+      color: #fef08a;
+    }
+    .server-status.status-red {
+      border-color: rgba(239, 68, 68, 0.75);
+      background: rgba(239, 68, 68, 0.16);
+      color: #fecaca;
+    }
+    .server-status.status-running {
+      border-color: rgba(56, 189, 248, 0.85);
+      background: rgba(56, 189, 248, 0.18);
+      color: #bae6fd;
+    }
+    .server-mini-btn {
+      flex: 0 0 auto;
+      width: 28px;
+      height: 30px;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1;
+      cursor: pointer;
+      background: transparent;
+    }
+    .server-add-btn {
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      color: #86efac;
+    }
+    .server-remove-btn {
+      border: 1px solid rgba(239, 68, 68, 0.7);
+      color: #fca5a5;
+    }
+    .server-dup-badge {
+      flex: 0 0 auto;
+      padding: 0 7px;
+      height: 30px;
+      display: inline-flex;
+      align-items: center;
+      border-radius: 6px;
+      font-size: 11px;
+      border: 1px solid rgba(250, 204, 21, 0.75);
+      color: #fef08a;
+      cursor: default;
+    }
+    .server-pool-hint {
+      font-size: 11px;
+      line-height: 1.6;
+      color: var(--text-muted, #999);
+    }
+    .field-hint {
+      font-size: 11px;
+      line-height: 1.5;
+      color: var(--text-muted, #999);
+    }
+    .custom-label-editable {
+      cursor: text;
+      outline: none;
+      white-space: pre-line;
+      user-select: text;
+    }
+    .custom-label-editable:focus {
+      color: var(--text-primary, #e5e5ea);
+      text-decoration: underline dotted rgba(125, 211, 252, 0.8);
+      text-underline-offset: 3px;
+    }
+    .plugin-mirror-notice {
+      margin: 0 0 14px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--text-secondary, #aaa);
+    }
+    .plugin-mirror-notice-title {
+      font-weight: 600;
+      color: var(--text-primary, #e5e5ea);
+      margin-bottom: 6px;
+    }
+    .plugin-mirror-notice a {
+      color: #7dd3fc;
+      word-break: break-all;
+    }
+
+    /* API 列表（亮色青绿） */
+    .pair-row.tone-preset select.mono-input {
+      background-color: rgba(45, 212, 191, 0.32) !important;
+      border: 1px solid rgba(20, 184, 166, 0.85) !important;
+      color: #f0fdfa !important;
+      flex: 1 1 0;
+    }
+    .pair-row.tone-preset .mini-btn,
+    .preset-actions-row .mini-btn.preset-save,
+    .preset-actions-row .mini-btn.preset-delete {
+      background: rgba(45, 212, 191, 0.32);
+      border-color: rgba(20, 184, 166, 0.85);
+      color: #f0fdfa;
+    }
+    .preset-actions-row .form-control {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .preset-actions-row .mini-btn.preset-delete.preset-delete-armed {
+      background: rgba(239, 68, 68, 0.45);
+      border-color: rgba(220, 38, 38, 0.9);
+      color: #fff;
+      animation: zealmanPulse 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes zealmanPulse {
+      from { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.6); }
+      to   { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+    }
+    /* 切换 / 新建 / 删除后，字段闪一下让用户直观感知数据已替换 */
+    @keyframes zealmanFlash {
+      0%   { background-color: rgba(250, 204, 21, 0.55); box-shadow: inset 0 0 0 1px rgba(202, 138, 4, 0.85); }
+      100% { background-color: transparent; box-shadow: inset 0 0 0 1px transparent; }
+    }
+    .zealman-preset-flash {
+      animation: zealmanFlash 700ms ease-out;
+    }
+    /* 顶部居中 Toast */
+    .zealman-toast {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translate(-50%, -20px);
+      max-width: 80%;
+      padding: 8px 14px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #f1f5f9;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      border-radius: 8px;
+      font-size: 13px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 180ms ease, transform 180ms ease;
+      z-index: 9999;
+      white-space: pre-wrap;
+    }
+    .zealman-toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .u26-tabs {
+      display: flex;
+      gap: 8px;
+      margin: 10px 0 14px;
+    }
+
+    .u26-tab-btn {
+      border: 1px solid #3b5668;
+      background: #102231;
+      color: #d8e8f1;
+      border-radius: 6px;
+      padding: 7px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .u26-tab-btn.active {
+      background: #1d5f73;
+      border-color: #3b91a8;
+      color: #fff;
+    }
+
+    .u26-tab-page.hidden {
+      display: none;
+    }
+
+    .optimizer-panel .form-control {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .optimizer-panel input[type="checkbox"],
+    .optimizer-panel input[type="radio"] {
+      width: auto;
+    }
+
+    .optimizer-radio {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="plugin-mirror-notice">
+    <div class="plugin-mirror-notice-title">版本2.2 仅支持镜像</div>
+    <div>
+      <a href="https://autodl.art/app/market/252?v=679" target="_blank" rel="noopener noreferrer">https://autodl.art/app/market/252?v=679</a><br>
+      镜像QQ群 1群1046279436 2群1102535136
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">插件更新</label>
+    <div class="form-control pair-row">
+      <button type="button" id="checkUpdateBtn" class="mini-btn">检查更新</button>
+      <span id="updateStatus" class="field-hint">当前版本 v1.0.0</span>
+    </div>
+  </div>
+
+  <div class="u26-tabs">
+    <button type="button" id="basicTabBtn" class="u26-tab-btn active">基础设置</button>
+    <button type="button" id="optimizerTabBtn" class="u26-tab-btn">提示词优化</button>
+  </div>
+
+  <div id="basicTabPage" class="u26-tab-page">
+
+  <div id="serverUrlContainer"></div>
+
+  <div class="form-row">
+    <label class="form-label form-label-stacked">每台并发<br>任务数</label>
+    <div class="form-control pair-row">
+      <input type="number" id="perServerConcurrencyInput" class="mono-input tone-panel" min="1" max="8" step="1" value="1" title="单次批量生成时，每台面板同时跑几个任务">
+      <div class="server-pool-hint">
+        多个面板地址会按“进行中 + 排队”的总任务数分摊任务：每次提交前自动选择任务最少的机器，并列时按顺序轮换；某台失败会自动换一台重试。<br>
+        要求所有面板是同一镜像克隆、共用同一个 Workflow ID。点状态按钮可检测连通性，按钮会显示该机当前进行中和排队数量。
+      </div>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">API 列表</label>
+    <div class="form-control pair-row tone-preset">
+      <select id="apiPresetSelect" class="mono-input" title="切换已保存的 API 配置"></select>
+      <button type="button" id="importApiBtn" class="mini-btn" title="从 JSON 文件导入一个或多个 API 预设">导入 API</button>
+      <input type="file" id="importApiFileInput" accept=".json,application/json" style="display:none">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">Workflow ID</label>
+    <div class="form-control">
+      <input type="text" id="workflowIdInput" class="mono-input tone-workflow" placeholder="工作流 ID（镜像内查看）">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">正向提示词键名</label>
+    <div class="form-control">
+      <input type="text" id="promptKeyInput" class="mono-input tone-width-key" placeholder="正向ID:类型">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">负向提示词键名</label>
+    <div class="form-control">
+      <input type="text" id="negativePromptKeyInput" class="mono-input tone-width-key" placeholder="负向ID:类型">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label form-label-stacked">宽度键名ID<br>宽度值你写</label>
+    <div class="form-control pair-row tone-width">
+      <input type="text" id="widthKeyInput" class="mono-input" placeholder="宽度ID:类型">
+      <input type="number" id="outputWidthInput" min="64" max="8192" step="1" class="mono-input" value="1280" placeholder="宽度值">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label form-label-stacked">高度键名ID<br>高度值你写</label>
+    <div class="form-control pair-row tone-height">
+      <input type="text" id="heightKeyInput" class="mono-input tone-width-key" placeholder="高度ID:类型">
+      <input type="number" id="outputHeightInput" min="64" max="8192" step="1" class="mono-input tone-width-key" value="720" placeholder="高度值">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label form-label-stacked">种子键名ID<br>种子值你写</label>
+    <div class="form-control pair-row tone-seed">
+      <input type="text" id="seedKeyInput" class="mono-input" placeholder="种子ID:类型">
+      <input type="number" id="seedValueInput" class="mono-input" value="27296748841994" placeholder="种子值">
+    </div>
+  </div>
+  <div class="form-row">
+    <label class="form-label">每次随机种子</label>
+    <div class="form-control" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="randomizeSeedCheck" style="width:auto">
+    </div>
+  </div>
+
+  <div class="form-row section-title-row">
+    <label class="form-label"></label>
+    <div class="form-control"><span class="section-title">图片映射（首帧 / 尾帧 / 参考图1–14，最多 14 行）</span></div>
+  </div>
+  <div id="imageMapsContainer"></div>
+  <div class="form-row">
+    <label class="form-label"></label>
+    <div class="form-control">
+      <button type="button" id="addImageMapBtn" class="mini-btn">+ 添加图片映射</button>
+    </div>
+  </div>
+
+  <div class="form-row section-title-row">
+    <label class="form-label"></label>
+    <div class="form-control"><span class="section-title">视频映射（原视频 / 视频1–14，最多 14 行；键名写入 input_values 发给 ComfyUI）</span></div>
+  </div>
+  <div id="videoMapsContainer"></div>
+  <div class="form-row">
+    <label class="form-label"></label>
+    <div class="form-control">
+      <button type="button" id="addVideoMapBtn" class="mini-btn">+ 添加视频映射</button>
+    </div>
+  </div>
+
+  <div class="form-row section-title-row">
+    <label class="form-label"></label>
+    <div class="form-control"><span class="section-title">音频映射（分镜音频 / 外部音频 / 音频1–14，最多 14 行；对口型、音驱工作流用它喂 LoadAudio）</span></div>
+  </div>
+  <div id="audioMapsContainer"></div>
+  <div class="form-row">
+    <label class="form-label"></label>
+    <div class="form-control">
+      <button type="button" id="addAudioMapBtn" class="mini-btn">+ 添加音频映射</button>
+    </div>
+  </div>
+  <div class="form-row">
+    <label class="form-label form-label-stacked">提示词标注<br>参考素材身份</label>
+    <div class="form-control" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="refLabelPrefixCheck" style="width:auto" checked>
+      <span class="field-hint">在提示词前自动加上「图1 是人物张三，视频1 是场景客厅，音频1 是张三的音色，」，名字取自项目里的角色/场景/物品，只标注已接入工作流的参考素材</span>
+    </div>
+  </div>
+
+  <div class="form-row section-title-row">
+    <label class="form-label"></label>
+    <div class="form-control"><span class="section-title">自定义参数（键名和值都可以编辑，修改后自动保存当前 API；纯数字会自动按整数/小数提交）</span></div>
+  </div>
+  <div id="customFieldsContainer"></div>
+  <div class="form-row">
+    <label class="form-label"></label>
+    <div class="form-control">
+      <button type="button" id="addCustomFieldBtn" class="mini-btn">+ 添加参数</button>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">轮询间隔(秒)</label>
+    <div class="form-control">
+      <input type="number" id="pollIntervalInput" class="mono-input tone-timing" min="0.5" max="60" step="0.5" value="2">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">最长等待(秒)</label>
+    <div class="form-control">
+      <input type="number" id="maxWaitInput" class="mono-input tone-timing" min="30" max="86400" step="1" value="1800">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">请求超时(秒)</label>
+    <div class="form-control">
+      <input type="number" id="requestTimeoutInput" class="mono-input tone-timing" min="30" max="3600" step="1" value="120">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label">生成前后清显存</label>
+    <div class="form-control" style="display:flex;align-items:center;gap:8px;">
+      <input type="checkbox" id="freeVramCheck" style="width:auto" checked>
+      <span class="field-hint">调用镜像的 /api/comfy/proxy/free；失败不会阻断生成。</span>
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label class="form-label form-label-stacked">文件上传路径<br>（可选）</label>
+    <div class="form-control">
+      <input type="text" id="uploadUrlPathInput" class="mono-input tone-url" placeholder="留空则依次尝试 /api/comfy/upload/file、/api/comfy/upload/image 等">
+    </div>
+  </div>
+
+  <div class="form-row preset-actions-row">
+    <label class="form-label">当前 API</label>
+    <div class="form-control">
+      <button type="button" id="saveAsNewApiBtn" class="mini-btn preset-save" title="把当前所有字段保存为一个新的 API 预设">+ 保存为新 API</button>
+      <button type="button" id="deleteApiBtn" class="mini-btn preset-delete" title="删除当前选中的 API 预设">删除当前 API</button>
+    </div>
+  </div>
+
+  </div>
+
+  <div id="optimizerTabPage" class="u26-tab-page hidden optimizer-panel">
+    <div class="form-row section-title-row">
+      <label class="form-label"></label>
+      <div class="form-control"><span class="section-title">LLM提示词优化配置</span></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">优化方式</label>
+      <div class="form-control"><select id="optimizerModeInput" class="mono-input"><option value="api">在线 API</option><option value="local">本地模型</option></select></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">平台</label>
+      <div class="form-control"><select id="optimizerProviderInput" class="mono-input"><option value="runninghub">RunningHub 国内版（推荐）</option><option value="runninghub_overseas">RunningHub 海外版</option><option value="openai">OpenAI</option><option value="gemini">Google Gemini</option><option value="openrouter">OpenRouter</option><option value="dashscope">阿里云百炼</option><option value="siliconflow">SiliconFlow</option><option value="custom">自定义</option></select></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">API Key</label>
+      <div class="form-control"><input id="optimizerApiKeyInput" type="text" class="mono-input" autocomplete="off"></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">模型</label>
+      <div class="form-control"><select id="optimizerModelInput" class="mono-input"><option value="openai/gpt-5.6-sol">openai/gpt-5.6-sol</option><option value="google/gemini-3.6-flash">google/gemini-3.6-flash</option><option value="openai/gpt-5.5">openai/gpt-5.5</option><option value="google/gemini-2.5-pro">google/gemini-2.5-pro</option><option value="google/gemini-2.5-flash">google/gemini-2.5-flash</option><option value="qwen/qwen3.8-max">qwen/qwen3.8-max</option><option value="deepseek/deepseek-v4-pro">deepseek/deepseek-v4-pro</option><option value="deepseek/deepseek-v4-flash">deepseek/deepseek-v4-flash</option><option value="qwen/qwen3.6-plus">qwen/qwen3.6-plus</option><option value="glm-5.2">glm-5.2</option><option value="minimax/minimax-m2.7">minimax/minimax-m2.7</option></select></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">最大输出 Tokens</label>
+      <div class="form-control"><input id="optimizerMaxTokensInput" type="number" class="mono-input" min="256" max="32768" step="256"></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">输出语言</label>
+      <div class="form-control"><label class="optimizer-radio"><input type="radio" name="optimizerLang" value="English">English</label><label class="optimizer-radio"><input type="radio" name="optimizerLang" value="中文">中文</label></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">读取视觉素材</label>
+      <div class="form-control"><input id="optimizerReadMediaInput" type="checkbox"></div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">运行前自动优化提示词</label>
+      <div class="form-control"><input id="optimizerAutoInput" type="checkbox"></div>
+    </div>
+  </div>
+
+  <script src="../../../plugin-sdk.js"></script>
+  <script>
+    var MIN_IMAGE_MAP_ROWS = 2
+    var MAX_IMAGE_MAP_ROWS = 14
+    var MIN_VIDEO_MAP_ROWS = 1
+    var MAX_VIDEO_MAP_ROWS = 14
+    var MIN_AUDIO_MAP_ROWS = 1
+    var MAX_AUDIO_MAP_ROWS = 14
+
+    var serverUrlContainer = document.getElementById('serverUrlContainer')
+    var perServerConcurrencyInput = document.getElementById('perServerConcurrencyInput')
+    var apiPresetSelect = document.getElementById('apiPresetSelect')
+    var importApiBtn = document.getElementById('importApiBtn')
+    var importApiFileInput = document.getElementById('importApiFileInput')
+    var saveAsNewApiBtn = document.getElementById('saveAsNewApiBtn')
+    var deleteApiBtn = document.getElementById('deleteApiBtn')
+    var workflowIdInput = document.getElementById('workflowIdInput')
+    var promptKeyInput = document.getElementById('promptKeyInput')
+    var negativePromptKeyInput = document.getElementById('negativePromptKeyInput')
+    var widthKeyInput = document.getElementById('widthKeyInput')
+    var heightKeyInput = document.getElementById('heightKeyInput')
+    var seedKeyInput = document.getElementById('seedKeyInput')
+    var seedValueInput = document.getElementById('seedValueInput')
+    var randomizeSeedCheck = document.getElementById('randomizeSeedCheck')
+    var imageMapsContainer = document.getElementById('imageMapsContainer')
+    var addImageMapBtn = document.getElementById('addImageMapBtn')
+    var refLabelPrefixCheck = document.getElementById('refLabelPrefixCheck')
+    var videoMapsContainer = document.getElementById('videoMapsContainer')
+    var addVideoMapBtn = document.getElementById('addVideoMapBtn')
+    var audioMapsContainer = document.getElementById('audioMapsContainer')
+    var addAudioMapBtn = document.getElementById('addAudioMapBtn')
+    var customFieldsContainer = document.getElementById('customFieldsContainer')
+    var addCustomFieldBtn = document.getElementById('addCustomFieldBtn')
+    var optimizerFieldsContainer = document.getElementById('optimizerFieldsContainer')
+    var basicTabBtn = document.getElementById('basicTabBtn')
+    var optimizerTabBtn = document.getElementById('optimizerTabBtn')
+    var basicTabPage = document.getElementById('basicTabPage')
+    var optimizerTabPage = document.getElementById('optimizerTabPage')
+    var optimizerModeInput = document.getElementById('optimizerModeInput')
+    var optimizerProviderInput = document.getElementById('optimizerProviderInput')
+    var optimizerApiKeyInput = document.getElementById('optimizerApiKeyInput')
+    var optimizerModelInput = document.getElementById('optimizerModelInput')
+    var optimizerMaxTokensInput = document.getElementById('optimizerMaxTokensInput')
+    var optimizerReadMediaInput = document.getElementById('optimizerReadMediaInput')
+    var optimizerAutoInput = document.getElementById('optimizerAutoInput')
+    var checkUpdateBtn = document.getElementById('checkUpdateBtn')
+    var updateStatus = document.getElementById('updateStatus')
+    var pendingUpdate = null
+    var outputWidthInput = document.getElementById('outputWidthInput')
+    var outputHeightInput = document.getElementById('outputHeightInput')
+    var pollIntervalInput = document.getElementById('pollIntervalInput')
+    var maxWaitInput = document.getElementById('maxWaitInput')
+    var requestTimeoutInput = document.getElementById('requestTimeoutInput')
+    var freeVramCheck = document.getElementById('freeVramCheck')
+    var uploadUrlPathInput = document.getElementById('uploadUrlPathInput')
+
+    var imageMapRows = []
+    var videoMapRows = []
+    var audioMapRows = []
+    var customFieldRows = []
+    var optimizerFieldRows = []
+
+    var optimizerFieldDefs = [
+      { key: '__h3_optimizer.mode', label: '优化方式', value: 'api' },
+      { key: '__h3_optimizer.provider', label: '平台', value: 'runninghub' },
+      { key: '__h3_optimizer.api_key', label: 'API Key', value: '' },
+      { key: '__h3_optimizer.model', label: '模型', value: 'google/gemini-3.6-flash' },
+      { key: '__h3_optimizer.max_tokens', label: '最大输出 Tokens', value: 4096 },
+      { key: '__h3_optimizer.output_language', label: '输出语言', value: '中文' },
+      { key: '__h3_optimizer.read_media', label: '读取视觉素材', value: 'true' },
+      { key: '__h3_optimizer.auto_optimize', label: '运行前自动优化提示词', value: 'false' }
+    ]
+
+    // ====== API 预设状态 ======
+    var apiPresets = []
+    var activePresetIdx = 0
+    var isApplyingPreset = false  // 切换预设时阻止字段 change 反向写回
+    var customSaveTimer = null
+
+    var MAX_REF_IMAGE_SLOTS = 14
+
+    // ====== 面板地址池：多个地址在并发任务间分摊 ======
+    var MAX_SERVER_SLOTS = 10
+    var SERVER_STATUSES = ['none', 'empty', 'green', 'yellow', 'red']
+    var serverEntries = []        // 固定 10 个槽位 [{index, url, status}]
+    var lastHealthStatus = {}     // 记住最近一次检测结果，沙漏结束后恢复用，避免状态灯闪烁
+    var prevRunningSet = {}
+    var urlDebounceTimers = {}
+
+    function cleanServerUrl(u) {
+      return String(u == null ? '' : u).trim().replace(/\/+$/, '')
+    }
+
+    // 与后端 _normalize_server_entries 保持一致：补齐 10 个槽位，并把旧的单地址迁到槽位 1
+    function normalizeServerEntries(raw, baseUrl) {
+      var byIndex = {}
+      if (Array.isArray(raw)) {
+        raw.forEach(function (item, i) {
+          var idx, url, status
+          if (item && typeof item === 'object') {
+            idx = parseInt(item.index, 10)
+            url = cleanServerUrl(item.url)
+            status = String(item.status || '')
+          } else if (typeof item === 'string') {
+            idx = i + 1
+            url = cleanServerUrl(item)
+            status = url ? 'green' : 'empty'
+          } else {
+            return
+          }
+          if (!(idx >= 1 && idx <= MAX_SERVER_SLOTS) || byIndex[idx]) return
+          if (SERVER_STATUSES.indexOf(status) < 0) status = url ? 'green' : 'empty'
+          if (status !== 'none' && !url) status = 'empty'
+          byIndex[idx] = { index: idx, url: url, status: status }
+        })
+      }
+      var out = []
+      for (var i = 1; i <= MAX_SERVER_SLOTS; i++) {
+        out.push(byIndex[i] || { index: i, url: '', status: 'none' })
+      }
+      var hasActive = out.some(function (e) { return e.status !== 'none' })
+      if (!hasActive) {
+        var migrated = cleanServerUrl(baseUrl)
+        out[0] = { index: 1, url: migrated, status: migrated ? 'green' : 'empty' }
+      }
+      return out
+    }
+
+    function activeServerEntries() {
+      return serverEntries.filter(function (e) { return e.status !== 'none' })
+    }
+
+    function findServerEntry(index) {
+      for (var i = 0; i < serverEntries.length; i++) {
+        if (serverEntries[i].index === index) return serverEntries[i]
+      }
+      return null
+    }
+
+    function saveServerEntries() {
+      var batch = { server_urls: serverEntries }
+      var first = serverEntries[0] && serverEntries[0].url
+      if (first) batch.base_url = first   // 与旧字段保持同步，老配置读取仍然有效
+      PluginSDK.saveParams(batch)
+    }
+
+    function serverStatusText(status, taskCount, taskInfo) {
+      if (taskInfo && taskInfo.available) {
+        return '跑' + (taskInfo.running || 0) + ' 排' + (taskInfo.queued || 0)
+      }
+      if (status === 'running') return '⌛' + (taskCount || '')
+      switch (status) {
+        case 'green': return '在线'
+        case 'yellow': return '检测'
+        case 'red': return '离线'
+        case 'empty': return '未填'
+        default: return '未检'
+      }
+    }
+
+    function serverStatusTitle(status, taskInfo) {
+      var queueText = ''
+      if (taskInfo) {
+        if (taskInfo.available) {
+          queueText = '；当前任务：进行中 ' + (taskInfo.running || 0) + '，排队 ' + (taskInfo.queued || 0)
+          if (taskInfo.source) queueText += '（' + taskInfo.source + '）'
+        } else if (taskInfo.detail) {
+          queueText = '；队列信息未取到：' + taskInfo.detail
+        }
+      }
+      switch (status) {
+        case 'green': return '在线 — 连通正常，可以接任务' + queueText + '（点击重新检测）'
+        case 'yellow': return '正在检测连通性…' + queueText
+        case 'red': return '离线 — 连不上；生成时会优先用在线的机器，必要时仍会尝试这台' + queueText + '（点击重试）'
+        case 'empty': return '未填写地址'
+        case 'running': return '运行中 — 这台面板正在跑任务' + queueText
+        default: return '尚未检测' + queueText + '（点击检测）'
+      }
+    }
+
+    function setServerDot(index, status, taskCount, taskInfo) {
+      var btn = serverUrlContainer.querySelector('.server-status[data-index="' + index + '"]')
+      if (!btn) return
+      btn.className = 'server-status status-' + status
+      btn.title = serverStatusTitle(status, taskInfo)
+      btn.textContent = serverStatusText(status, taskCount, taskInfo)
+    }
+
+    function renderServerRows() {
+      serverUrlContainer.innerHTML = ''
+      var visible = activeServerEntries()
+
+      var urlCount = {}
+      visible.forEach(function (e) {
+        if (e.url) urlCount[e.url] = (urlCount[e.url] || 0) + 1
+      })
+
+      visible.forEach(function (entry) {
+        var row = document.createElement('div')
+        row.className = 'form-row'
+
+        var label = document.createElement('label')
+        label.className = 'form-label'
+        label.textContent = visible.length > 1 ? ('面板地址 ' + entry.index) : 'zealman面板地址'
+
+        var control = document.createElement('div')
+        control.className = 'form-control'
+
+        var group = document.createElement('div')
+        group.className = 'server-input-group'
+
+        var input = document.createElement('input')
+        input.type = 'text'
+        input.className = 'mono-input tone-panel'
+        input.setAttribute('data-index', entry.index)
+        input.placeholder = 'https://…:8443（勿以 / 结尾）'
+        input.value = entry.url
+        input.title = entry.url || '未填写地址'
+        group.appendChild(input)
+
+        var statusBtn = document.createElement('button')
+        statusBtn.type = 'button'
+        statusBtn.className = 'server-status status-' + entry.status
+        statusBtn.setAttribute('data-index', entry.index)
+        statusBtn.title = serverStatusTitle(entry.status)
+        statusBtn.textContent = serverStatusText(entry.status)
+        statusBtn.addEventListener('click', (function (idx) {
+          return function () { checkServerStatus(idx) }
+        })(entry.index))
+        group.appendChild(statusBtn)
+
+        if (entry.url && urlCount[entry.url] > 1) {
+          var dup = document.createElement('span')
+          dup.className = 'server-dup-badge'
+          dup.textContent = '重复'
+          dup.title = '多个槽位填了相同地址，任务不会真正分摊到不同机器'
+          group.appendChild(dup)
+        }
+
+        if (entry.index === 1 && visible.length < MAX_SERVER_SLOTS) {
+          var addBtn = document.createElement('button')
+          addBtn.type = 'button'
+          addBtn.className = 'server-mini-btn server-add-btn'
+          addBtn.textContent = '+'
+          addBtn.title = '再加一个面板地址（最多 ' + MAX_SERVER_SLOTS + ' 个），任务会自动分摊'
+          addBtn.addEventListener('click', addServerRow)
+          group.appendChild(addBtn)
+        }
+        if (entry.index > 1) {
+          var delBtn = document.createElement('button')
+          delBtn.type = 'button'
+          delBtn.className = 'server-mini-btn server-remove-btn'
+          delBtn.textContent = '×'
+          delBtn.title = '移除这个面板地址，不再参与并发'
+          delBtn.addEventListener('click', (function (idx) {
+            return function () { removeServerRow(idx) }
+          })(entry.index))
+          group.appendChild(delBtn)
+        }
+
+        input.addEventListener('change', (function (idx) {
+          return function () { onServerUrlEdited(idx) }
+        })(entry.index))
+        input.addEventListener('input', (function (idx) {
+          return function () {
+            if (urlDebounceTimers[idx]) clearTimeout(urlDebounceTimers[idx])
+            urlDebounceTimers[idx] = setTimeout(function () { onServerUrlEdited(idx) }, 800)
+          }
+        })(entry.index))
+
+        control.appendChild(group)
+        row.appendChild(label)
+        row.appendChild(control)
+        serverUrlContainer.appendChild(row)
+      })
+    }
+
+    function onServerUrlEdited(index) {
+      var input = serverUrlContainer.querySelector('input[data-index="' + index + '"]')
+      var entry = findServerEntry(index)
+      if (!input || !entry) return
+      var url = cleanServerUrl(input.value)
+      if (url === entry.url) return   // 防抖与 change 会重复触发同一次编辑
+      entry.url = url
+      entry.status = url ? 'yellow' : 'empty'
+      delete lastHealthStatus[String(index)]
+      saveServerEntries()
+      renderServerRows()              // 重复地址徽标需要重算
+      if (url) checkServerStatus(index)
+    }
+
+    function addServerRow() {
+      for (var i = 0; i < serverEntries.length; i++) {
+        if (serverEntries[i].status !== 'none') continue
+        serverEntries[i].status = serverEntries[i].url ? 'yellow' : 'empty'
+        saveServerEntries()
+        renderServerRows()
+        if (serverEntries[i].url) checkServerStatus(serverEntries[i].index)
+        return
+      }
+      showToast('最多 ' + MAX_SERVER_SLOTS + ' 个面板地址')
+    }
+
+    function removeServerRow(index) {
+      var entry = findServerEntry(index)
+      if (!entry || index <= 1) return
+      entry.status = 'none'
+      delete lastHealthStatus[String(index)]
+      delete prevRunningSet[String(index)]
+      saveServerEntries()
+      renderServerRows()
+      showToast('已移除面板地址 ' + index)
+    }
+
+    function checkServerStatus(index) {
+      var entry = findServerEntry(index)
+      if (!entry) return
+      if (!entry.url) {
+        setServerDot(index, 'empty')
+        return
+      }
+      setServerDot(index, 'yellow')
+      PluginSDK.sendAction(
+        'check_server_status',
+        { url: entry.url, _index: String(index) },
+        { timeoutMs: 20000 }
+      ).then(function (res) {
+        // 正常结果由 onAction 处理；这里只负责后端没响应时把状态灯从"检测中"解开
+        if (res && res.ok) return
+        var btn = serverUrlContainer.querySelector('.server-status[data-index="' + index + '"]')
+        if (!btn || btn.classList.contains('status-running')) return
+        setServerDot(index, lastHealthStatus[String(index)] || 'yellow')
+        btn.title = '连通性未知 — ' + ((res && res.error) || '后端未返回检测结果') + '（点击重试）'
+      })
+    }
+
+    function checkAllServerStatus() {
+      activeServerEntries().forEach(function (e) {
+        if (e.url) checkServerStatus(e.index)
+        else setServerDot(e.index, 'empty')
+      })
+    }
+
+    PluginSDK.onAction('check_server_status', function (data) {
+      if (!data || !data.ok || data._index == null) return
+      var index = parseInt(data._index, 10)
+      var entry = findServerEntry(index)
+      if (!entry || entry.url !== cleanServerUrl(data.url)) return   // 地址已被改过，丢弃过期结果
+      var status = data.healthy ? 'green' : 'red'
+      lastHealthStatus[String(index)] = status
+      if (entry.status !== status) {
+        entry.status = status
+        saveServerEntries()
+      }
+      var btn = serverUrlContainer.querySelector('.server-status[data-index="' + index + '"]')
+      var taskInfo = data.task_info || null
+      var displayStatus = status
+      if (taskInfo && taskInfo.available && ((taskInfo.running || 0) + (taskInfo.queued || 0) > 0)) {
+        displayStatus = 'running'
+      }
+      setServerDot(index, displayStatus, null, taskInfo)
+      if (btn && data.detail) {
+        // 在线也给提示：能看到面板已运行多久，以及是否只是首页可达
+        btn.title = (data.healthy ? '在线 — ' : '离线 — ') + data.detail
+          + (taskInfo && !taskInfo.available && taskInfo.detail ? '；' + taskInfo.detail : '')
+          + '（点击重检）'
+      }
+    })
+
+    function pollRunningServers() {
+      // 短超时：轮询频率高，别让未响应的请求在 SDK 里堆积
+      PluginSDK.sendAction('get_running_servers', {}, { timeoutMs: 8000 })
+    }
+
+    PluginSDK.onAction('get_running_servers', function (data) {
+      if (!data || !data.ok) return
+      var running = data.running_servers || {}
+      var nextSet = {}
+      Object.keys(running).forEach(function (key) {
+        nextSet[key] = true
+        setServerDot(parseInt(key, 10), 'running', running[key])
+      })
+      Object.keys(prevRunningSet).forEach(function (key) {
+        if (nextSet[key]) return
+        var entry = findServerEntry(parseInt(key, 10))
+        setServerDot(parseInt(key, 10), lastHealthStatus[key] || (entry && entry.status) || 'green')
+      })
+      prevRunningSet = nextSet
+    })
+
+    function refOptionList() {
+      var list = [
+        ['', '不使用'],
+        ['占位图', '占位图(白256)'],
+        ['首帧', '首帧'],
+        ['尾帧', '尾帧']
+      ]
+      for (var i = 1; i <= MAX_REF_IMAGE_SLOTS; i++) {
+        list.push(['图' + i, '图' + i])
+      }
+      return list
+    }
+
+    function fillRefSelect(selectEl, value) {
+      selectEl.innerHTML = ''
+      refOptionList().forEach(function (pair) {
+        var opt = document.createElement('option')
+        opt.value = pair[0]
+        opt.textContent = pair[1]
+        selectEl.appendChild(opt)
+      })
+      var strVal = String(value == null ? '' : value)
+      for (var i = 0; i < selectEl.options.length; i++) {
+        if (selectEl.options[i].value === strVal) {
+          selectEl.selectedIndex = i
+          return
+        }
+      }
+    }
+
+    var MAX_REF_VIDEO_SLOTS = 14
+
+    function videoOptionList() {
+      var list = [
+        ['', '不使用'],
+        ['原视频', '原视频（分镜原视频）']
+      ]
+      for (var i = 1; i <= MAX_REF_VIDEO_SLOTS; i++) {
+        list.push(['视频' + i, '视频' + i])
+      }
+      return list
+    }
+
+    function fillVideoSelect(selectEl, value) {
+      selectEl.innerHTML = ''
+      videoOptionList().forEach(function (pair) {
+        var opt = document.createElement('option')
+        opt.value = pair[0]
+        opt.textContent = pair[1]
+        selectEl.appendChild(opt)
+      })
+      var strVal = String(value == null ? '' : value)
+      for (var i = 0; i < selectEl.options.length; i++) {
+        if (selectEl.options[i].value === strVal) {
+          selectEl.selectedIndex = i
+          return
+        }
+      }
+    }
+
+    var MAX_REF_AUDIO_SLOTS = 14
+
+    function audioOptionList() {
+      var list = [
+        ['', '不使用'],
+        ['分镜音频', '分镜音频（本分镜配音）'],
+        ['外部音频', '外部音频（导入的音频）']
+      ]
+      for (var i = 1; i <= MAX_REF_AUDIO_SLOTS; i++) {
+        list.push(['音频' + i, '音频' + i])
+      }
+      return list
+    }
+
+    function fillAudioSelect(selectEl, value) {
+      selectEl.innerHTML = ''
+      audioOptionList().forEach(function (pair) {
+        var opt = document.createElement('option')
+        opt.value = pair[0]
+        opt.textContent = pair[1]
+        selectEl.appendChild(opt)
+      })
+      var strVal = String(value == null ? '' : value)
+      for (var i = 0; i < selectEl.options.length; i++) {
+        if (selectEl.options[i].value === strVal) {
+          selectEl.selectedIndex = i
+          return
+        }
+      }
+    }
+
+    function refreshImageMapLabels() {
+      imageMapRows.forEach(function (row, idx) {
+        row.label.innerHTML = '图' + (idx + 1) + '键名ID<br>字字映射你选'
+      })
+    }
+
+    function syncImageRemoveButtons() {
+      var show = imageMapRows.length > MIN_IMAGE_MAP_ROWS
+      imageMapRows.forEach(function (row) {
+        row.removeBtn.style.display = show ? 'inline-block' : 'none'
+      })
+      addImageMapBtn.disabled = imageMapRows.length >= MAX_IMAGE_MAP_ROWS
+    }
+
+    function saveImageMappings() {
+      if (isApplyingPreset) return
+      commitActiveFromForm()
+    }
+
+    function saveVideoMappings() {
+      if (isApplyingPreset) return
+      commitActiveFromForm()
+    }
+
+    function saveAudioMappings() {
+      if (isApplyingPreset) return
+      commitActiveFromForm()
+    }
+
+    function removeImageMapRow(row) {
+      if (imageMapRows.length <= MIN_IMAGE_MAP_ROWS) return
+      var i = imageMapRows.indexOf(row)
+      if (i === -1) return
+      imageMapRows.splice(i, 1)
+      row.wrap.remove()
+      refreshImageMapLabels()
+      reassignImageSlotClasses()
+      syncImageRemoveButtons()
+      saveImageMappings()
+    }
+
+    function reassignImageSlotClasses() {
+      imageMapRows.forEach(function (row, idx) {
+        var slot = (idx % 5) + 1
+        row.pairRow.className = 'form-control pair-row tone-img-slot-' + slot
+      })
+    }
+
+    function refreshVideoMapLabels() {
+      videoMapRows.forEach(function (row, idx) {
+        row.label.innerHTML = '视频' + (idx + 1) + '键名ID<br>源视频映射'
+      })
+    }
+
+    function syncVideoRemoveButtons() {
+      var show = videoMapRows.length > MIN_VIDEO_MAP_ROWS
+      videoMapRows.forEach(function (row) {
+        row.removeBtn.style.display = show ? 'inline-block' : 'none'
+      })
+      addVideoMapBtn.disabled = videoMapRows.length >= MAX_VIDEO_MAP_ROWS
+    }
+
+    function removeVideoMapRow(row) {
+      if (videoMapRows.length <= MIN_VIDEO_MAP_ROWS) return
+      var i = videoMapRows.indexOf(row)
+      if (i === -1) return
+      videoMapRows.splice(i, 1)
+      row.wrap.remove()
+      refreshVideoMapLabels()
+      syncVideoRemoveButtons()
+      saveVideoMappings()
+    }
+
+    function refreshAudioMapLabels() {
+      audioMapRows.forEach(function (row, idx) {
+        row.label.innerHTML = '音频' + (idx + 1) + '键名ID<br>音频源映射'
+      })
+    }
+
+    function syncAudioRemoveButtons() {
+      var show = audioMapRows.length > MIN_AUDIO_MAP_ROWS
+      audioMapRows.forEach(function (row) {
+        row.removeBtn.style.display = show ? 'inline-block' : 'none'
+      })
+      addAudioMapBtn.disabled = audioMapRows.length >= MAX_AUDIO_MAP_ROWS
+    }
+
+    function removeAudioMapRow(row) {
+      if (audioMapRows.length <= MIN_AUDIO_MAP_ROWS) return
+      var i = audioMapRows.indexOf(row)
+      if (i === -1) return
+      audioMapRows.splice(i, 1)
+      row.wrap.remove()
+      refreshAudioMapLabels()
+      syncAudioRemoveButtons()
+      saveAudioMappings()
+    }
+
+    function addAudioMapRow(initialKey, initialSource) {
+      var idx = audioMapRows.length
+      var wrap = document.createElement('div')
+      wrap.className = 'form-row'
+
+      var label = document.createElement('label')
+      label.className = 'form-label form-label-stacked'
+      label.innerHTML = '音频' + (idx + 1) + '键名ID<br>音频源映射'
+
+      var pairRow = document.createElement('div')
+      pairRow.className = 'form-control pair-row tone-audio-slot'
+
+      var keyInput = document.createElement('input')
+      keyInput.type = 'text'
+      keyInput.className = 'mono-input'
+      keyInput.placeholder = '音频ID:类型'
+      keyInput.value = initialKey || ''
+
+      var sourceSelect = document.createElement('select')
+      fillAudioSelect(sourceSelect, initialSource || '')
+
+      var removeBtn = document.createElement('button')
+      removeBtn.type = 'button'
+      removeBtn.className = 'mini-btn'
+      removeBtn.textContent = '删'
+      removeBtn.style.display = 'none'
+
+      pairRow.appendChild(keyInput)
+      pairRow.appendChild(sourceSelect)
+      pairRow.appendChild(removeBtn)
+      wrap.appendChild(label)
+      wrap.appendChild(pairRow)
+      audioMapsContainer.appendChild(wrap)
+
+      var row = { wrap: wrap, label: label, keyInput: keyInput, sourceSelect: sourceSelect, removeBtn: removeBtn }
+      audioMapRows.push(row)
+
+      keyInput.addEventListener('change', saveAudioMappings)
+      sourceSelect.addEventListener('change', saveAudioMappings)
+      removeBtn.addEventListener('click', function () { removeAudioMapRow(row) })
+
+      refreshAudioMapLabels()
+      syncAudioRemoveButtons()
+    }
+
+    function addVideoMapRow(initialKey, initialSource) {
+      var idx = videoMapRows.length
+      var wrap = document.createElement('div')
+      wrap.className = 'form-row'
+
+      var label = document.createElement('label')
+      label.className = 'form-label form-label-stacked'
+      label.innerHTML = '视频' + (idx + 1) + '键名ID<br>源视频映射'
+
+      var pairRow = document.createElement('div')
+      pairRow.className = 'form-control pair-row tone-video-slot'
+
+      var keyInput = document.createElement('input')
+      keyInput.type = 'text'
+      keyInput.className = 'mono-input'
+      keyInput.placeholder = '视频ID:类型'
+      keyInput.value = initialKey || ''
+
+      var sourceSelect = document.createElement('select')
+      fillVideoSelect(sourceSelect, initialSource || '')
+
+      var removeBtn = document.createElement('button')
+      removeBtn.type = 'button'
+      removeBtn.className = 'mini-btn'
+      removeBtn.textContent = '删'
+      removeBtn.style.display = 'none'
+
+      pairRow.appendChild(keyInput)
+      pairRow.appendChild(sourceSelect)
+      pairRow.appendChild(removeBtn)
+      wrap.appendChild(label)
+      wrap.appendChild(pairRow)
+      videoMapsContainer.appendChild(wrap)
+
+      var row = { wrap: wrap, label: label, keyInput: keyInput, sourceSelect: sourceSelect, removeBtn: removeBtn }
+      videoMapRows.push(row)
+
+      keyInput.addEventListener('change', saveVideoMappings)
+      sourceSelect.addEventListener('change', saveVideoMappings)
+      removeBtn.addEventListener('click', function () { removeVideoMapRow(row) })
+
+      refreshVideoMapLabels()
+      syncVideoRemoveButtons()
+    }
+
+    function addImageMapRow(initialKey, initialSource) {
+      var idx = imageMapRows.length
+      var slot = (idx % 5) + 1
+      var wrap = document.createElement('div')
+      wrap.className = 'form-row'
+
+      var label = document.createElement('label')
+      label.className = 'form-label form-label-stacked'
+      label.innerHTML = '图' + (idx + 1) + '键名ID<br>字字映射你选'
+
+      var pairRow = document.createElement('div')
+      pairRow.className = 'form-control pair-row tone-img-slot-' + slot
+
+      var keyInput = document.createElement('input')
+      keyInput.type = 'text'
+      keyInput.className = 'mono-input'
+      keyInput.placeholder = '图片ID:类型'
+      keyInput.value = initialKey || ''
+
+      var sourceSelect = document.createElement('select')
+      fillRefSelect(sourceSelect, initialSource || '')
+
+      var removeBtn = document.createElement('button')
+      removeBtn.type = 'button'
+      removeBtn.className = 'mini-btn'
+      removeBtn.textContent = '删'
+      removeBtn.style.display = 'none'
+
+      pairRow.appendChild(keyInput)
+      pairRow.appendChild(sourceSelect)
+      pairRow.appendChild(removeBtn)
+      wrap.appendChild(label)
+      wrap.appendChild(pairRow)
+      imageMapsContainer.appendChild(wrap)
+
+      var row = { wrap: wrap, label: label, pairRow: pairRow, keyInput: keyInput, sourceSelect: sourceSelect, removeBtn: removeBtn }
+      imageMapRows.push(row)
+
+      keyInput.addEventListener('change', saveImageMappings)
+      sourceSelect.addEventListener('change', saveImageMappings)
+      removeBtn.addEventListener('click', function () { removeImageMapRow(row) })
+
+      refreshImageMapLabels()
+      reassignImageSlotClasses()
+      syncImageRemoveButtons()
+    }
+
+    function saveCustomFields() {
+      if (isApplyingPreset) return
+      commitActiveFromForm()
+    }
+
+    function scheduleSaveCustomFields() {
+      if (isApplyingPreset) return
+      if (customSaveTimer) clearTimeout(customSaveTimer)
+      customSaveTimer = setTimeout(function () {
+        customSaveTimer = null
+        saveCustomFields()
+      }, 250)
+    }
+
+    function removeCustomFieldRow(row) {
+      var i = customFieldRows.indexOf(row)
+      if (i === -1) return
+      customFieldRows.splice(i, 1)
+      row.wrap.remove()
+      saveCustomFields()
+    }
+
+    function normalizeWorkflowEnumValue(key, value) {
+      if (!String(key || '').trim().toLowerCase().endsWith(':aspect')) return value
+      var aliases = {
+        '1:1 (Square)': '1:1',
+        '2:3 (Portrait Photo)': '2:3',
+        '3:2 (Photo)': '3:2',
+        '3:4 (Portrait Standard)': '3:4',
+        '4:3 (Standard)': '4:3',
+        '9:16 (Portrait Widescreen)': '9:16',
+        '16:9 (Widescreen)': '16:9',
+        '21:9 (Ultrawide)': '21:9'
+      }
+      var text = String(value == null ? '' : value).trim()
+      return Object.prototype.hasOwnProperty.call(aliases, text) ? aliases[text] : value
+    }
+
+    function addCustomFieldRow(initialKey, initialValue, initialLabel, initialMeta, targetContainer, targetRows) {
+      targetContainer = targetContainer || customFieldsContainer
+      targetRows = targetRows || customFieldRows
+      var wrap = document.createElement('div')
+      wrap.className = 'form-row'
+
+      var label = document.createElement('label')
+      label.className = 'form-label form-label-stacked'
+      label.classList.add('custom-label-editable')
+      label.contentEditable = 'true'
+      label.spellcheck = false
+      label.setAttribute('role', 'textbox')
+      label.title = '点击这里修改界面显示文字，不会影响工作流参数'
+      label.textContent = initialLabel != null && String(initialLabel).trim()
+        ? String(initialLabel)
+        : '参数键名ID\n参数你写'
+
+      var pairRow = document.createElement('div')
+      pairRow.className = 'form-control pair-row tone-custom'
+
+      var keyInput = document.createElement('input')
+      keyInput.type = 'text'
+      keyInput.className = 'mono-input'
+      keyInput.placeholder = '参数ID:类型'
+      keyInput.title = '工作流参数键名，例如 132:value'
+      keyInput.autocomplete = 'off'
+      keyInput.value = initialKey != null ? String(initialKey) : ''
+
+      var meta = initialMeta && typeof initialMeta === 'object' ? initialMeta : {}
+      var valInput
+      if (meta.type === 'select' && Array.isArray(meta.options) && meta.options.length) {
+        valInput = document.createElement('select')
+        meta.options.forEach(function (option) {
+          var optionEl = document.createElement('option')
+          var rawOptionValue = option && typeof option === 'object'
+            ? option.value
+            : option
+          var optionLabel = option && typeof option === 'object'
+            ? (option.label != null ? option.label : option.value)
+            : option
+          var optionValue = normalizeWorkflowEnumValue(initialKey, rawOptionValue)
+          optionEl.value = String(optionValue == null ? '' : optionValue)
+          optionEl.textContent = String(optionLabel == null ? '' : optionLabel)
+          valInput.appendChild(optionEl)
+        })
+      } else {
+        valInput = document.createElement('input')
+        valInput.type = meta.type === 'number' ? 'number' : 'text'
+      }
+      valInput.className = 'mono-input'
+      valInput.placeholder = '参数值'
+      valInput.title = '参数值，例如 5、0.9、true 或文本'
+      valInput.autocomplete = 'off'
+      valInput.value = normalizeWorkflowEnumValue(
+        initialKey,
+        initialValue != null ? String(initialValue) : ''
+      )
+      if (meta.type === 'number') {
+        if (meta.min != null) valInput.min = meta.min
+        if (meta.max != null) valInput.max = meta.max
+        if (meta.step != null) valInput.step = meta.step
+      }
+
+      var removeBtn = document.createElement('button')
+      removeBtn.type = 'button'
+      removeBtn.className = 'mini-btn'
+      removeBtn.textContent = '删'
+
+      pairRow.appendChild(keyInput)
+      pairRow.appendChild(valInput)
+      pairRow.appendChild(removeBtn)
+      wrap.appendChild(label)
+      wrap.appendChild(pairRow)
+      targetContainer.appendChild(wrap)
+
+      var row = {
+        wrap: wrap,
+        label: label,
+        keyInput: keyInput,
+        valInput: valInput,
+        removeBtn: removeBtn,
+        meta: meta
+      }
+      targetRows.push(row)
+
+      label.addEventListener('input', scheduleSaveCustomFields)
+      keyInput.addEventListener('input', scheduleSaveCustomFields)
+      valInput.addEventListener('input', scheduleSaveCustomFields)
+      keyInput.addEventListener('change', saveCustomFields)
+      valInput.addEventListener('change', saveCustomFields)
+      removeBtn.addEventListener('click', function () { removeCustomFieldRow(row) })
+    }
+
+    function clearImageMapRows() {
+      imageMapsContainer.innerHTML = ''
+      imageMapRows = []
+    }
+
+    function clearVideoMapRows() {
+      videoMapsContainer.innerHTML = ''
+      videoMapRows = []
+    }
+
+    function clearAudioMapRows() {
+      audioMapsContainer.innerHTML = ''
+      audioMapRows = []
+    }
+
+    function clearCustomFieldRows() {
+      customFieldsContainer.innerHTML = ''
+      customFieldRows = []
+    }
+
+    function clearOptimizerFieldRows() {
+      optimizerFieldsContainer.innerHTML = ''
+      optimizerFieldRows = []
+    }
+
+    function isOptimizerField(item) {
+      return item && typeof item === 'object' && String(item.key || '').indexOf('__h3_optimizer.') === 0
+    }
+
+    function boolString(value, fallback) {
+      if (value === true || value === 'true' || value === 'True' || value === '1') return 'true'
+      if (value === false || value === 'false' || value === 'False' || value === '0') return 'false'
+      return fallback ? 'true' : 'false'
+    }
+
+    function optimizerMapFromPreset(preset) {
+      var out = {}
+      var customs = Array.isArray(preset.custom_input_values) ? preset.custom_input_values : []
+      customs.forEach(function (item) {
+        if (isOptimizerField(item)) out[item.key] = item
+      })
+      return out
+    }
+
+    function getOptimizerValue(map, key, fallback) {
+      return map[key] && map[key].value != null ? map[key].value : fallback
+    }
+
+    function setSelectValue(selectEl, value) {
+      var str = String(value == null ? '' : value)
+      var found = false
+      for (var i = 0; i < selectEl.options.length; i++) {
+        if (selectEl.options[i].value === str) { found = true; break }
+      }
+      if (!found && str) {
+        var opt = document.createElement('option')
+        opt.value = str
+        opt.textContent = str
+        selectEl.appendChild(opt)
+      }
+      selectEl.value = str
+    }
+
+    var optimizerProviderDefaults = {
+      runninghub: { url: 'https://www.runninghub.cn/openapi/v2', protocol: 'runninghub', model: 'openai/gpt-5.6-sol' },
+      runninghub_overseas: { url: 'https://www.runninghub.ai/openapi/v2', protocol: 'runninghub', model: 'openai/gpt-5.6-sol' },
+      openai: { url: 'https://api.openai.com/v1', protocol: 'openai', model: 'gpt-4.1-mini' },
+      gemini: { url: 'https://generativelanguage.googleapis.com/v1beta', protocol: 'gemini', model: 'gemini-2.5-flash' },
+      openrouter: { url: 'https://openrouter.ai/api/v1', protocol: 'openai', model: 'google/gemini-2.5-flash' },
+      dashscope: { url: 'https://dashscope.aliyuncs.com/compatible-mode/v1', protocol: 'openai', model: 'qwen-vl-max' },
+      siliconflow: { url: 'https://api.siliconflow.cn/v1', protocol: 'openai', model: 'Qwen/Qwen2.5-VL-72B-Instruct' },
+      custom: { url: '', protocol: 'openai', model: '' }
+    }
+
+    function applyOptimizerToForm(preset) {
+      var map = optimizerMapFromPreset(preset)
+      setSelectValue(optimizerModeInput, getOptimizerValue(map, '__h3_optimizer.mode', 'api'))
+      setSelectValue(optimizerProviderInput, getOptimizerValue(map, '__h3_optimizer.provider', 'runninghub'))
+      optimizerApiKeyInput.value = getOptimizerValue(map, '__h3_optimizer.api_key', '') || ''
+      setSelectValue(optimizerModelInput, getOptimizerValue(map, '__h3_optimizer.model', 'google/gemini-3.6-flash'))
+      optimizerMaxTokensInput.value = getOptimizerValue(map, '__h3_optimizer.max_tokens', 4096)
+      var lang = String(getOptimizerValue(map, '__h3_optimizer.output_language', '中文'))
+      document.querySelectorAll('input[name="optimizerLang"]').forEach(function (radio) {
+        radio.checked = radio.value === lang
+      })
+      optimizerReadMediaInput.checked = boolString(getOptimizerValue(map, '__h3_optimizer.read_media', 'true'), true) === 'true'
+      optimizerAutoInput.checked = boolString(getOptimizerValue(map, '__h3_optimizer.auto_optimize', 'false'), false) === 'true'
+    }
+
+    function collectOptimizerItems() {
+      var lang = '中文'
+      document.querySelectorAll('input[name="optimizerLang"]').forEach(function (radio) {
+        if (radio.checked) lang = radio.value
+      })
+      var values = {
+        '__h3_optimizer.mode': optimizerModeInput.value,
+        '__h3_optimizer.provider': optimizerProviderInput.value,
+        '__h3_optimizer.api_key': optimizerApiKeyInput.value,
+        '__h3_optimizer.model': optimizerModelInput.value,
+        '__h3_optimizer.max_tokens': parseInt(optimizerMaxTokensInput.value, 10) || 4096,
+        '__h3_optimizer.output_language': lang,
+        '__h3_optimizer.read_media': optimizerReadMediaInput.checked ? 'true' : 'false',
+        '__h3_optimizer.auto_optimize': optimizerAutoInput.checked ? 'true' : 'false'
+      }
+      return optimizerFieldDefs.map(function (def) {
+        return { key: def.key, label: def.label, value: values[def.key] != null ? values[def.key] : def.value }
+      })
+    }
+
+    // ====== API 预设辅助函数 ======
+    function makeEmptyPreset(name) {
+      return {
+        name: (name && String(name)) || '新建API',
+        workflow_id: '',
+        workflow_template: null,
+        prompt_key: '',
+        negative_prompt_key: '',
+        width_key: '',
+        height_key: '',
+        seed_key: '',
+        seed_value: 0,
+        randomize_seed: false,
+        output_width: 1280,
+        output_height: 720,
+        image_input_mappings: [],
+        video_input_mappings: [],
+        audio_input_mappings: [],
+        reference_label_prefix: true,
+        custom_input_values: [],
+        fixed_input_values: {}
+      }
+    }
+
+    function customFieldsToValues(fields) {
+      if (!Array.isArray(fields)) return []
+      return fields.map(function (field) {
+        if (!field || typeof field !== 'object' || !field.key) return null
+        return {
+          key: String(field.key),
+          value: field.value,
+          label: field.label || '',
+          type: field.type || '',
+          options: Array.isArray(field.options) ? field.options : undefined,
+          min: field.min,
+          max: field.max,
+          step: field.step
+        }
+      }).filter(Boolean)
+    }
+
+    function normalizePresetSource(source) {
+      var s = String(source == null ? '' : source).trim()
+      var m = s.match(/^参考图(\d+)$/)
+      if (m) return '图' + m[1]
+      m = s.match(/^参考音频(\d+)$/)
+      if (m) return '音频' + m[1]
+      m = s.match(/^参考视频(\d+)$/)
+      if (m) return '视频' + m[1]
+      return s
+    }
+
+    function slotsToMappings(slots, kind) {
+      if (!Array.isArray(slots)) return []
+      return slots.map(function (slot, idx) {
+        if (!slot || typeof slot !== 'object' || !slot.key) return null
+        var source = slot.source != null ? String(slot.source) : ''
+        if (!source && kind === 'image') source = '参考图' + (idx + 1)
+        if (!source && kind === 'audio') source = '参考音频' + (idx + 1)
+        return { key: String(slot.key), source: normalizePresetSource(source) }
+      }).filter(Boolean)
+    }
+
+    function normalizeBuiltinPreset(raw) {
+      var preset = makeEmptyPreset(raw.ui_name || raw.name || raw.workflow_id || raw.id || '内置API')
+      preset._builtin_id = String(raw.id || raw.workflow_id || preset.name)
+      preset.name = raw.ui_name || raw.name || preset._builtin_id
+      preset.workflow_id = String(raw.workflow_id || raw.id || '')
+      preset.workflow_template = raw.workflow_template &&
+        typeof raw.workflow_template === 'object'
+        ? raw.workflow_template
+        : null
+      preset.prompt_key = String(raw.prompt_key || '')
+      preset.negative_prompt_key = String(raw.negative_prompt_key || '')
+      preset.width_key = String(raw.width_key || '')
+      preset.height_key = String(raw.height_key || '')
+      preset.seed_key = String(raw.seed_key || '')
+      preset.seed_value = raw.seed_value != null ? parseInt(raw.seed_value, 10) || 0 : 0
+      preset.randomize_seed = !!raw.randomize_seed
+      preset.output_width = raw.output_width != null ? parseInt(raw.output_width, 10) || 1280 : 1280
+      preset.output_height = raw.output_height != null ? parseInt(raw.output_height, 10) || 720 : 720
+      preset.image_input_mappings = Array.isArray(raw.image_input_mappings)
+        ? raw.image_input_mappings.map(function (item) {
+          return { key: String(item.key || ''), source: normalizePresetSource(item.source) }
+        }).filter(function (item) { return item.key })
+        : slotsToMappings(raw.image_slots, 'image')
+      preset.video_input_mappings = Array.isArray(raw.video_input_mappings)
+        ? raw.video_input_mappings.map(function (item) {
+          return { key: String(item.key || ''), source: normalizePresetSource(item.source) }
+        }).filter(function (item) { return item.key })
+        : slotsToMappings(raw.video_slots, 'video')
+      preset.audio_input_mappings = Array.isArray(raw.audio_input_mappings)
+        ? raw.audio_input_mappings.map(function (item) {
+          return { key: String(item.key || ''), source: normalizePresetSource(item.source) }
+        }).filter(function (item) { return item.key })
+        : slotsToMappings(raw.audio_slots, 'audio')
+      preset.reference_label_prefix = true
+      preset.custom_input_values = Array.isArray(raw.custom_input_values)
+        ? raw.custom_input_values
+        : customFieldsToValues(raw.custom_fields)
+      preset.custom_fields = Array.isArray(raw.custom_fields) ? raw.custom_fields : []
+      preset.fixed_input_values = raw.fixed_input_values && typeof raw.fixed_input_values === 'object'
+        ? raw.fixed_input_values
+        : {}
+      return preset
+    }
+
+    function mergeBuiltinPresets(presets, builtinPresets) {
+      var list = Array.isArray(presets) ? presets.slice() : []
+      var seen = {}
+      list.forEach(function (preset) {
+        if (!preset || typeof preset !== 'object') return
+        var id = preset._builtin_id || preset.id || preset.workflow_id || preset.name
+        if (id) seen[String(id)] = true
+        var raw = (Array.isArray(builtinPresets) ? builtinPresets : []).find(function (item) {
+          return item && String(item.id || item.workflow_id || item.name || '') === String(id || '')
+        })
+        if (!raw) return
+        var normalized = normalizeBuiltinPreset(raw)
+        if (!Array.isArray(preset.custom_fields) || !preset.custom_fields.length) {
+          preset.custom_fields = normalized.custom_fields || []
+        }
+        var metadataByKey = {}
+        ;(normalized.custom_fields || []).forEach(function (field) {
+          if (field && field.key) metadataByKey[String(field.key)] = field
+        })
+        if (Array.isArray(preset.custom_input_values)) {
+          preset.custom_input_values = preset.custom_input_values.map(function (item) {
+            if (!item || typeof item !== 'object') return item
+            var metadata = metadataByKey[String(item.key || '')]
+            return metadata ? Object.assign({}, metadata, item) : item
+          })
+        }
+      })
+      if (Array.isArray(builtinPresets)) {
+        builtinPresets.forEach(function (raw) {
+          if (!raw || typeof raw !== 'object') return
+          var id = String(raw.id || raw.workflow_id || raw.name || '')
+          if (!id || seen[id]) return
+          list.push(normalizeBuiltinPreset(raw))
+          seen[id] = true
+        })
+      }
+      return list
+    }
+
+    function looksLikeComfyWorkflow(obj) {
+      if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return false
+      return Object.keys(obj).some(function (key) {
+        var node = obj[key]
+        return node && typeof node === 'object' &&
+          node.class_type && node.inputs && typeof node.inputs === 'object'
+      })
+    }
+
+    function comfyWorkflowNodeKey(nodeId, inputKey) {
+      return String(nodeId) + ':' + String(inputKey)
+    }
+
+    function addImportedCustomField(fields, workflow, nodeId, inputKey, label, type, extra) {
+      var node = workflow[nodeId]
+      if (!node || !node.inputs || node.inputs[inputKey] == null) return
+      var value = node.inputs[inputKey]
+      if (Array.isArray(value) || (value && typeof value === 'object')) return
+      var field = Object.assign({
+        key: comfyWorkflowNodeKey(nodeId, inputKey),
+        value: value,
+        label: label,
+        type: type || (typeof value === 'number' ? 'number' : 'text')
+      }, extra || {})
+      fields.push(field)
+    }
+
+    function convertComfyWorkflowToPreset(workflow, filename) {
+      var nodeIds = Object.keys(workflow || {})
+      var candidates = nodeIds.filter(function (nodeId) {
+        var node = workflow[nodeId]
+        if (!node || !node.inputs) return false
+        var keys = Object.keys(node.inputs)
+        return keys.indexOf('prompt') >= 0 ||
+          keys.some(function (key) {
+            return /^ref_(?:image|video|audio)_\d+$/.test(key)
+          })
+      })
+      candidates.sort(function (a, b) {
+        function score(nodeId) {
+          var node = workflow[nodeId] || {}
+          var title = node._meta && node._meta.title ? String(node._meta.title) : ''
+          var classType = String(node.class_type || '')
+          var text = (title + ' ' + classType).toLowerCase()
+          return (text.indexOf('h3') >= 0 ? 4 : 0) +
+            (text.indexOf('integration') >= 0 || text.indexOf('适配器') >= 0 ? 3 : 0) +
+            (workflow[nodeId].inputs.prompt != null ? 2 : 0)
+        }
+        return score(b) - score(a)
+      })
+      var adapterId = candidates[0]
+      if (!adapterId) return null
+
+      var baseName = String(filename || 'ComfyUI工作流').replace(/\.[^.]+$/, '')
+      var preset = makeEmptyPreset(baseName)
+      preset.name = baseName
+      preset.workflow_id = baseName
+      preset.workflow_template = workflow
+      preset.prompt_key = comfyWorkflowNodeKey(adapterId, 'prompt')
+      preset.output_width = 1280
+      preset.output_height = 720
+      preset.image_input_mappings = []
+      preset.video_input_mappings = []
+      preset.audio_input_mappings = []
+      preset.custom_input_values = []
+      preset.fixed_input_values = {}
+
+      var adapter = workflow[adapterId]
+      var inputs = adapter.inputs || {}
+      if (inputs.first_frame != null) {
+        preset.image_input_mappings.push({
+          key: comfyWorkflowNodeKey(adapterId, 'first_frame'),
+          source: '首帧'
+        })
+      }
+      if (inputs.last_frame != null) {
+        preset.image_input_mappings.push({
+          key: comfyWorkflowNodeKey(adapterId, 'last_frame'),
+          source: '尾帧'
+        })
+      }
+      for (var imageIndex = 1; imageIndex <= 9; imageIndex++) {
+        var imageKey = 'ref_image_' + imageIndex
+        if (inputs[imageKey] != null) {
+          preset.image_input_mappings.push({
+            key: comfyWorkflowNodeKey(adapterId, imageKey),
+            source: '图' + imageIndex
+          })
+        }
+      }
+      for (var videoIndex = 1; videoIndex <= 3; videoIndex++) {
+        var videoKey = 'ref_video_' + videoIndex
+        if (inputs[videoKey] != null) {
+          preset.video_input_mappings.push({
+            key: comfyWorkflowNodeKey(adapterId, videoKey),
+            source: '视频' + videoIndex
+          })
+        }
+      }
+      for (var audioIndex = 1; audioIndex <= 3; audioIndex++) {
+        var audioKey = 'ref_audio_' + audioIndex
+        if (inputs[audioKey] != null) {
+          preset.audio_input_mappings.push({
+            key: comfyWorkflowNodeKey(adapterId, audioKey),
+            source: '音频' + audioIndex
+          })
+        }
+      }
+
+      addImportedCustomField(
+        preset.custom_input_values, workflow, adapterId, 'duration_seconds',
+        '时长(秒)', 'number', { min: 1, max: 15, step: 1 }
+      )
+      addImportedCustomField(
+        preset.custom_input_values, workflow, adapterId, 'megapixels',
+        '百万像素', 'number', { min: 0.2, max: 2, step: 0.1 }
+      )
+      addImportedCustomField(
+        preset.custom_input_values, workflow, adapterId, 'aspect',
+        '宽高比', 'select', {
+          options: [
+            { value: 'adaptive', label: '自适应' },
+            { value: '1:1', label: '1:1 (Square)' },
+            { value: '2:3', label: '2:3 (Portrait Photo)' },
+            { value: '3:2', label: '3:2 (Photo)' },
+            { value: '3:4', label: '3:4 (Portrait Standard)' },
+            { value: '4:3', label: '4:3 (Standard)' },
+            { value: '9:16', label: '9:16 (Portrait Widescreen)' },
+            { value: '16:9', label: '16:9 (Widescreen)' },
+            { value: '21:9', label: '21:9 (Ultrawide)' }
+          ]
+        }
+      )
+
+      nodeIds.forEach(function (nodeId) {
+        var node = workflow[nodeId]
+        if (!node || !node.inputs || node.inputs['noise_seed'] == null) return
+        if (!preset.seed_key) {
+          preset.seed_key = comfyWorkflowNodeKey(nodeId, 'noise_seed')
+          preset.seed_value = parseInt(node.inputs.noise_seed, 10) || 0
+        }
+      })
+
+      nodeIds.forEach(function (nodeId) {
+        var node = workflow[nodeId]
+        if (!node || !node.inputs || node.inputs['值'] == null) return
+        var title = node._meta && node._meta.title ? String(node._meta.title) : ''
+        if (title.indexOf('放大') < 0 && title.toLowerCase().indexOf('scale') < 0) return
+        addImportedCustomField(
+          preset.custom_input_values, workflow, nodeId, '值',
+          title || '自定义数值', 'number', { min: 1, max: 3, step: 0.1 }
+        )
+      })
+
+      // 兼容只有宽高节点的 ComfyUI 工作流，优先把明确的自定义宽高带入。
+      nodeIds.forEach(function (nodeId) {
+        var node = workflow[nodeId]
+        if (!node || !node.inputs) return
+        ;['width', 'custom_width', 'output_width'].forEach(function (key) {
+          if (!preset.width_key && node.inputs[key] != null && !Array.isArray(node.inputs[key])) {
+            preset.width_key = comfyWorkflowNodeKey(nodeId, key)
+            preset.output_width = parseInt(node.inputs[key], 10) || preset.output_width
+          }
+        })
+        ;['height', 'custom_height', 'output_height'].forEach(function (key) {
+          if (!preset.height_key && node.inputs[key] != null && !Array.isArray(node.inputs[key])) {
+            preset.height_key = comfyWorkflowNodeKey(nodeId, key)
+            preset.output_height = parseInt(node.inputs[key], 10) || preset.output_height
+          }
+        })
+      })
+      return preset
+    }
+
+    function importApiPresetsFromObject(raw, filename) {
+      var incoming = Array.isArray(raw) ? raw : [raw]
+      var imported = 0
+      var updated = 0
+      var skipped = 0
+      var existingIds = {}
+      var existingIndexes = {}
+      apiPresets.forEach(function (preset) {
+        var id = preset && (preset._builtin_id || preset.id || preset.workflow_id || preset.name)
+        if (id) {
+          existingIds[String(id)] = true
+          existingIndexes[String(id)] = apiPresets.indexOf(preset)
+        }
+      })
+
+      incoming.forEach(function (item) {
+        if (!item || typeof item !== 'object') {
+          skipped++
+          return
+        }
+        if (looksLikeComfyWorkflow(item)) {
+          var converted = convertComfyWorkflowToPreset(item, filename)
+          if (!converted) {
+            skipped++
+            return
+          }
+          var convertedId = String(converted.workflow_id || converted.name)
+          if (existingIds[convertedId]) {
+            var existingIndex = existingIndexes[convertedId]
+            var existingPreset = existingIndex >= 0 ? apiPresets[existingIndex] : null
+            if (existingPreset && existingPreset.name && existingPreset.name !== '默认') {
+              converted.name = existingPreset.name
+            }
+            converted._imported = true
+            apiPresets[existingIndex] = converted
+            activePresetIdx = existingIndex
+            updated++
+          } else {
+            converted._imported = true
+            apiPresets.push(converted)
+            existingIds[convertedId] = true
+            existingIndexes[convertedId] = apiPresets.length - 1
+            activePresetIdx = apiPresets.length - 1
+            imported++
+          }
+          return
+        }
+        var id = String(item.id || item._builtin_id || item.workflow_id || item.name || '')
+        if (!id || existingIds[id]) {
+          skipped++
+          return
+        }
+        var preset = normalizeBuiltinPreset(item)
+        if (!preset.workflow_id) {
+          skipped++
+          return
+        }
+        preset._imported = true
+        delete preset._builtin_id
+        apiPresets.push(preset)
+        existingIds[id] = true
+        imported++
+      })
+
+      if (imported > 0 || updated > 0) {
+        refreshApiPresetSelect()
+        applyPresetToForm(getActivePreset())
+        flashFormSwitched()
+        savePresetState()
+      }
+      showToast(
+        imported > 0 || updated > 0
+          ? (imported ? '已导入 ' + imported + ' 个 API' : '') +
+            (updated ? (imported ? '，' : '') + '已更新 ' + updated + ' 个 API' : '') +
+            (skipped ? '，跳过 ' + skipped + ' 个重复或无效项' : '')
+          : '没有导入新 API，可能是重复或格式不正确'
+      )
+    }
+
+    function getActivePreset() {
+      if (!apiPresets[activePresetIdx]) {
+        apiPresets[activePresetIdx] = makeEmptyPreset('API_' + (activePresetIdx + 1))
+      }
+      return apiPresets[activePresetIdx]
+    }
+
+    function savePresetState() {
+      // 关键：批量保存，避免多次单 key save_param 之间的 race / 整体覆盖丢字段。
+      // 同时把所有"全局字段"一起写出，相当于每次都做一次完整状态快照。
+      var batch = {
+        api_presets: apiPresets,
+        active_preset_index: activePresetIdx,
+        server_urls: serverEntries,
+        base_url: (serverEntries[0] && serverEntries[0].url) || '',
+        per_server_concurrency: parseInt(perServerConcurrencyInput.value, 10) || 1,
+        poll_interval_sec: parseFloat(pollIntervalInput.value) || 2,
+        max_wait_sec: parseInt(maxWaitInput.value, 10) || 1800,
+        request_timeout: parseInt(requestTimeoutInput.value, 10) || 120,
+        free_vram_between_generate: !!freeVramCheck.checked,
+        upload_url_path: uploadUrlPathInput.value.trim()
+      }
+      PluginSDK.saveParams(batch)
+    }
+
+    function refreshApiPresetSelect() {
+      apiPresetSelect.innerHTML = ''
+      apiPresets.forEach(function (preset, idx) {
+        var opt = document.createElement('option')
+        opt.value = String(idx)
+        var name = (preset && preset.name) ? String(preset.name) : ('API_' + (idx + 1))
+        opt.textContent = (idx + 1) + '. ' + name + (preset && preset._builtin_id ? '（内置）' : '')
+        apiPresetSelect.appendChild(opt)
+      })
+      if (activePresetIdx < 0) activePresetIdx = 0
+      if (activePresetIdx >= apiPresets.length) activePresetIdx = apiPresets.length - 1
+      apiPresetSelect.value = String(activePresetIdx)
+    }
+
+    function collectFormIntoPreset(preset) {
+      preset.workflow_id = workflowIdInput.value.trim()
+      preset.prompt_key = promptKeyInput.value.trim()
+      preset.negative_prompt_key = negativePromptKeyInput.value.trim()
+      preset.width_key = widthKeyInput.value.trim()
+      preset.height_key = heightKeyInput.value.trim()
+      preset.seed_key = seedKeyInput.value.trim()
+      preset.seed_value = parseInt(seedValueInput.value, 10) || 0
+      preset.randomize_seed = !!randomizeSeedCheck.checked
+      preset.output_width = parseInt(outputWidthInput.value, 10) || 1280
+      preset.output_height = parseInt(outputHeightInput.value, 10) || 720
+      preset.image_input_mappings = imageMapRows.map(function (row) {
+        return { key: row.keyInput.value.trim(), source: row.sourceSelect.value }
+      })
+      preset.video_input_mappings = videoMapRows.map(function (row) {
+        return { key: row.keyInput.value.trim(), source: row.sourceSelect.value }
+      })
+      preset.audio_input_mappings = audioMapRows.map(function (row) {
+        return { key: row.keyInput.value.trim(), source: row.sourceSelect.value }
+      })
+      preset.reference_label_prefix = !!refLabelPrefixCheck.checked
+      var normalItems = customFieldRows.map(function (row) {
+        var item = {
+          key: row.keyInput.value.trim(),
+          value: row.valInput.value,
+          label: row.label.textContent.trim()
+        }
+        if (row.meta && typeof row.meta === 'object') {
+          ;['type', 'options', 'min', 'max', 'step'].forEach(function (key) {
+            if (row.meta[key] != null) item[key] = row.meta[key]
+          })
+        }
+        return item
+      }).filter(function (item) { return item.key })
+      preset.custom_input_values = normalItems.concat(collectOptimizerItems())
+      if (preset.fixed_input_values == null || typeof preset.fixed_input_values !== 'object') {
+        preset.fixed_input_values = {}
+      }
+    }
+
+    function applyPresetToForm(preset) {
+      isApplyingPreset = true
+      try {
+        workflowIdInput.value = preset.workflow_id || ''
+        promptKeyInput.value = preset.prompt_key || ''
+        negativePromptKeyInput.value = preset.negative_prompt_key || ''
+        widthKeyInput.value = preset.width_key || ''
+        heightKeyInput.value = preset.height_key || ''
+        seedKeyInput.value = preset.seed_key || ''
+        seedValueInput.value = preset.seed_value != null ? preset.seed_value : 0
+        randomizeSeedCheck.checked = !!preset.randomize_seed
+        outputWidthInput.value = preset.output_width != null ? preset.output_width : 1280
+        outputHeightInput.value = preset.output_height != null ? preset.output_height : 720
+
+        // 老预设没有这个字段，缺省视为开启，与后端默认值保持一致
+        refLabelPrefixCheck.checked = preset.reference_label_prefix !== false
+
+        clearImageMapRows()
+        var mappings = Array.isArray(preset.image_input_mappings) ? preset.image_input_mappings : []
+        var n = Math.max(MIN_IMAGE_MAP_ROWS, mappings.length)
+        for (var i = 0; i < n; i++) {
+          var item = mappings[i] || {}
+          addImageMapRow(item.key || '', item.source || '')
+        }
+
+        clearVideoMapRows()
+        var videoMappings = Array.isArray(preset.video_input_mappings) ? preset.video_input_mappings : []
+        var vn = Math.max(MIN_VIDEO_MAP_ROWS, videoMappings.length)
+        for (var j = 0; j < vn; j++) {
+          var vitem = videoMappings[j] || {}
+          addVideoMapRow(vitem.key || '', vitem.source || '')
+        }
+
+        clearAudioMapRows()
+        var audioMappings = Array.isArray(preset.audio_input_mappings) ? preset.audio_input_mappings : []
+        var an = Math.max(MIN_AUDIO_MAP_ROWS, audioMappings.length)
+        for (var k = 0; k < an; k++) {
+          var aitem = audioMappings[k] || {}
+          addAudioMapRow(aitem.key || '', aitem.source || '')
+        }
+
+        clearCustomFieldRows()
+        var customs = Array.isArray(preset.custom_input_values) ? preset.custom_input_values : []
+        customs.forEach(function (citem) {
+          if (!citem || typeof citem !== 'object') return
+          if (isOptimizerField(citem)) return
+          addCustomFieldRow(
+            citem.key,
+            citem.value != null ? citem.value : '',
+            citem.label,
+            citem
+          )
+        })
+        applyOptimizerToForm(preset)
+      } finally {
+        isApplyingPreset = false
+      }
+    }
+
+    function commitActiveFromForm() {
+      collectFormIntoPreset(getActivePreset())
+      savePresetState()
+    }
+
+    // 仅把 form 同步到当前 preset，不写盘。供切换/新建/删除等"会自己最终调一次 savePresetState"的场景用。
+    function commitActiveFromFormNoSave() {
+      collectFormIntoPreset(getActivePreset())
+    }
+
+    function switchU26Tab(tab) {
+      var optimizer = tab === 'optimizer'
+      basicTabBtn.classList.toggle('active', !optimizer)
+      optimizerTabBtn.classList.toggle('active', optimizer)
+      basicTabPage.classList.toggle('hidden', optimizer)
+      optimizerTabPage.classList.toggle('hidden', !optimizer)
+    }
+
+    // ====== 视觉反馈：切换 / 副本提示 ======
+    function flashFormSwitched() {
+      var nodes = [workflowIdInput, promptKeyInput, negativePromptKeyInput,
+        widthKeyInput, heightKeyInput, seedKeyInput, seedValueInput,
+        outputWidthInput, outputHeightInput,
+        imageMapsContainer, videoMapsContainer, audioMapsContainer, customFieldsContainer,
+        optimizerFieldsContainer]
+      nodes.forEach(function (el) {
+        if (!el) return
+        el.classList.remove('zealman-preset-flash')
+        void el.offsetWidth
+        el.classList.add('zealman-preset-flash')
+      })
+    }
+    var _toastTimer = null
+    function showToast(msg) {
+      var t = document.getElementById('zealmanToast')
+      if (!t) {
+        t = document.createElement('div')
+        t.id = 'zealmanToast'
+        t.className = 'zealman-toast'
+        document.body.appendChild(t)
+      }
+      t.textContent = msg
+      t.classList.add('show')
+      if (_toastTimer) clearTimeout(_toastTimer)
+      _toastTimer = setTimeout(function () { t.classList.remove('show') }, 2400)
+    }
+
+    function migrateLegacyParamsToPreset(params) {
+      var preset = makeEmptyPreset('默认')
+      if (params.workflow_id != null) preset.workflow_id = String(params.workflow_id)
+      if (params.prompt_key != null) preset.prompt_key = String(params.prompt_key)
+      if (params.negative_prompt_key != null) preset.negative_prompt_key = String(params.negative_prompt_key)
+      if (params.width_key != null) preset.width_key = String(params.width_key)
+      if (params.height_key != null) preset.height_key = String(params.height_key)
+      if (params.seed_key != null) preset.seed_key = String(params.seed_key)
+      if (params.seed_value != null) preset.seed_value = parseInt(params.seed_value, 10) || 0
+      if (params.randomize_seed != null) preset.randomize_seed = !!params.randomize_seed
+      if (params.output_width != null) preset.output_width = parseInt(params.output_width, 10) || 1280
+      if (params.output_height != null) preset.output_height = parseInt(params.output_height, 10) || 720
+      if (Array.isArray(params.image_input_mappings)) preset.image_input_mappings = params.image_input_mappings
+      if (Array.isArray(params.video_input_mappings)) preset.video_input_mappings = params.video_input_mappings
+      if (Array.isArray(params.audio_input_mappings)) preset.audio_input_mappings = params.audio_input_mappings
+      if (Array.isArray(params.audio_input_files) && !preset.audio_input_mappings.length) {
+        preset.audio_input_mappings = params.audio_input_files.map(function (item, idx) {
+          if (!item || typeof item !== 'object') return null
+          return { key: String(item.key || ''), source: normalizePresetSource(item.source || ('参考音频' + (idx + 1))) }
+        }).filter(function (item) { return item && item.key })
+      }
+      if (params.reference_label_prefix != null) preset.reference_label_prefix = !!params.reference_label_prefix
+      if (Array.isArray(params.custom_input_values)) preset.custom_input_values = params.custom_input_values
+      if (params.fixed_input_values && typeof params.fixed_input_values === 'object') {
+        preset.fixed_input_values = params.fixed_input_values
+      }
+      return preset
+    }
+
+    // ====== 添加按钮 ======
+    addImageMapBtn.addEventListener('click', function () {
+      if (imageMapRows.length >= MAX_IMAGE_MAP_ROWS) return
+      addImageMapRow('', '')
+      saveImageMappings()
+    })
+
+    addVideoMapBtn.addEventListener('click', function () {
+      if (videoMapRows.length >= MAX_VIDEO_MAP_ROWS) return
+      addVideoMapRow('', '')
+      saveVideoMappings()
+    })
+
+    addAudioMapBtn.addEventListener('click', function () {
+      if (audioMapRows.length >= MAX_AUDIO_MAP_ROWS) return
+      addAudioMapRow('', '')
+      saveAudioMappings()
+    })
+
+    addCustomFieldBtn.addEventListener('click', function () {
+      addCustomFieldRow('', '')
+      saveCustomFields()
+    })
+
+    function checkPluginUpdate(silent) {
+      if (!silent) updateStatus.textContent = '正在检查更新…'
+      checkUpdateBtn.disabled = true
+      checkUpdateBtn.textContent = '检查中…'
+      PluginSDK.sendAction('check_update', {}, { timeoutMs: 40000 }).catch(function (err) {
+        checkUpdateBtn.disabled = false
+        checkUpdateBtn.textContent = '检查更新'
+        if (!silent) updateStatus.textContent = '检查失败：' + String(err || '')
+      })
+    }
+
+    PluginSDK.onAction('check_update', function (data) {
+      checkUpdateBtn.disabled = false
+      if (!data || !data.ok) {
+        checkUpdateBtn.textContent = '检查更新'
+        updateStatus.textContent = (data && data.error) || '检查更新失败'
+        return
+      }
+      updateStatus.textContent = '当前 v' + data.current_version + (data.has_update ? '，发现 v' + data.latest_version : '，已是最新版')
+      if (data.has_update) {
+        pendingUpdate = data
+        checkUpdateBtn.textContent = '立即更新'
+      } else {
+        pendingUpdate = null
+        checkUpdateBtn.textContent = '检查更新'
+      }
+    })
+
+    PluginSDK.onAction('apply_update', function (data) {
+      checkUpdateBtn.disabled = false
+      checkUpdateBtn.textContent = '检查更新'
+      if (!data || !data.ok) {
+        updateStatus.textContent = (data && data.error) || '更新失败'
+        return
+      }
+      pendingUpdate = null
+      updateStatus.textContent = '已更新至 v' + (data.applied_version || '') + '，请重启字字动画'
+    })
+
+    basicTabBtn.addEventListener('click', function () { switchU26Tab('basic') })
+    optimizerTabBtn.addEventListener('click', function () { switchU26Tab('optimizer') })
+    checkUpdateBtn.addEventListener('click', function () {
+      if (pendingUpdate) {
+        checkUpdateBtn.disabled = true
+        checkUpdateBtn.textContent = '更新中…'
+        updateStatus.textContent = '正在下载并安装更新…'
+        PluginSDK.sendAction('apply_update', {
+          download_url: pendingUpdate.download_url,
+          sha256: pendingUpdate.sha256
+        }, { timeoutMs: 240000 }).catch(function (err) {
+          checkUpdateBtn.disabled = false
+          checkUpdateBtn.textContent = '立即更新'
+          updateStatus.textContent = '更新失败：' + String(err || '')
+        })
+      } else {
+        checkPluginUpdate(false)
+      }
+    })
+    ;[optimizerModeInput, optimizerProviderInput, optimizerApiKeyInput, optimizerModelInput,
+      optimizerMaxTokensInput, optimizerReadMediaInput, optimizerAutoInput].forEach(function (el) {
+      el.addEventListener('change', saveCustomFields)
+      el.addEventListener('input', scheduleSaveCustomFields)
+    })
+    document.querySelectorAll('input[name="optimizerLang"]').forEach(function (el) {
+      el.addEventListener('change', saveCustomFields)
+    })
+
+    // ====== 全局字段（不随 API 切换） ======
+    perServerConcurrencyInput.addEventListener('change', function () {
+      var n = parseInt(perServerConcurrencyInput.value, 10)
+      if (!(n >= 1)) n = 1
+      if (n > 8) n = 8
+      perServerConcurrencyInput.value = n
+      PluginSDK.saveParam('per_server_concurrency', n)
+    })
+    pollIntervalInput.addEventListener('change', function () {
+      PluginSDK.saveParam('poll_interval_sec', parseFloat(pollIntervalInput.value) || 2)
+    })
+    maxWaitInput.addEventListener('change', function () {
+      PluginSDK.saveParam('max_wait_sec', parseInt(maxWaitInput.value, 10) || 1800)
+    })
+    requestTimeoutInput.addEventListener('change', function () {
+      PluginSDK.saveParam('request_timeout', parseInt(requestTimeoutInput.value, 10) || 120)
+    })
+    freeVramCheck.addEventListener('change', function () {
+      PluginSDK.saveParam('free_vram_between_generate', !!freeVramCheck.checked)
+    })
+    uploadUrlPathInput.addEventListener('change', function () {
+      PluginSDK.saveParam('upload_url_path', uploadUrlPathInput.value.trim())
+    })
+
+    // ====== 预设字段（任意一处改动 -> 写入当前 active preset） ======
+    function bindPresetFieldChange(inputEl) {
+      inputEl.addEventListener('change', function () {
+        if (isApplyingPreset) return
+        commitActiveFromForm()
+      })
+    }
+    ;[workflowIdInput, promptKeyInput, negativePromptKeyInput,
+      widthKeyInput, heightKeyInput, seedKeyInput, seedValueInput,
+      randomizeSeedCheck, outputWidthInput, outputHeightInput, refLabelPrefixCheck
+    ].forEach(bindPresetFieldChange)
+
+    // ====== API 预设：切换/重命名/新建/删除 ======
+    function handlePresetSwitch() {
+      if (!apiPresets.length) return
+      if (isApplyingPreset) return
+      var newIdx = parseInt(apiPresetSelect.value, 10)
+      if (isNaN(newIdx) || newIdx < 0 || newIdx >= apiPresets.length) newIdx = 0
+      if (newIdx === activePresetIdx) return
+      // 1) 先把当前 form 同步到旧 preset（仅内存，避免与下面的 save 形成两次紧贴的 saveParams）
+      if (apiPresets[activePresetIdx]) {
+        collectFormIntoPreset(apiPresets[activePresetIdx])
+      }
+      // 2) 切到新预设
+      activePresetIdx = newIdx
+      applyPresetToForm(getActivePreset())
+      flashFormSwitched()
+      // 3) 一次性写盘（包含 active_preset_index 和已 commit 的 apiPresets）
+      savePresetState()
+    }
+    apiPresetSelect.addEventListener('change', handlePresetSwitch)
+    apiPresetSelect.addEventListener('input', handlePresetSwitch)
+
+    importApiBtn.addEventListener('click', function () {
+      importApiFileInput.value = ''
+      importApiFileInput.click()
+    })
+
+    importApiFileInput.addEventListener('change', function () {
+      var file = importApiFileInput.files && importApiFileInput.files[0]
+      if (!file) return
+      var reader = new FileReader()
+      reader.onload = function () {
+        try {
+          importApiPresetsFromObject(JSON.parse(String(reader.result || '')), file.name)
+        } catch (e) {
+          showToast('导入失败：JSON 格式不正确')
+        }
+      }
+      reader.onerror = function () {
+        showToast('导入失败：无法读取文件')
+      }
+      reader.readAsText(file, 'utf-8')
+    })
+
+    saveAsNewApiBtn.addEventListener('click', function () {
+      // 1) 先固化当前编辑到当前预设（仅内存，避免双 save race）
+      commitActiveFromFormNoSave()
+      // 2) 深拷贝一份，命名优先用 workflow_id，否则 API_<n>
+      var snapshot = JSON.parse(JSON.stringify(getActivePreset()))
+      var newName = (workflowIdInput.value || '').trim() || ('API_' + (apiPresets.length + 1))
+      var occupied = {}
+      apiPresets.forEach(function (p) { if (p && p.name) occupied[p.name] = true })
+      if (occupied[newName]) {
+        var k = 2
+        while (occupied[newName + ' (' + k + ')']) k++
+        newName = newName + ' (' + k + ')'
+      }
+      snapshot.name = newName
+      apiPresets.push(snapshot)
+      activePresetIdx = apiPresets.length - 1
+      refreshApiPresetSelect()
+      applyPresetToForm(getActivePreset())
+      flashFormSwitched()
+      savePresetState()
+      // 关键 UX 提示：复制行为容易让用户以为"切换没生效"，明确告知这是副本
+      showToast('已基于当前配置创建副本「' + newName + '」，可在此基础上修改')
+    })
+
+    // 双击确认删除：避免 iframe 内 window.confirm 可能被静默 false 的情况
+    var _deleteOriginalLabel = deleteApiBtn.textContent
+    var _deleteArmed = false
+    var _deleteArmTimer = null
+    function _disarmDelete() {
+      _deleteArmed = false
+      deleteApiBtn.textContent = _deleteOriginalLabel
+      deleteApiBtn.classList.remove('preset-delete-armed')
+      if (_deleteArmTimer) { clearTimeout(_deleteArmTimer); _deleteArmTimer = null }
+    }
+    deleteApiBtn.addEventListener('click', function () {
+      if (apiPresets.length <= 1) {
+        alert('至少需要保留一个 API 预设。如需重置，请直接在表单里改字段。')
+        return
+      }
+      if (!_deleteArmed) {
+        _deleteArmed = true
+        var preset = apiPresets[activePresetIdx]
+        var displayName = (preset && preset.name) ? preset.name : ('API_' + (activePresetIdx + 1))
+        deleteApiBtn.textContent = '再次点击删除「' + displayName + '」'
+        deleteApiBtn.classList.add('preset-delete-armed')
+        _deleteArmTimer = setTimeout(_disarmDelete, 3000)
+        return
+      }
+      _disarmDelete()
+      var removed = apiPresets[activePresetIdx]
+      var removedName = (removed && removed.name) ? removed.name : ('API_' + (activePresetIdx + 1))
+      apiPresets.splice(activePresetIdx, 1)
+      if (activePresetIdx >= apiPresets.length) activePresetIdx = apiPresets.length - 1
+      if (activePresetIdx < 0) activePresetIdx = 0
+      refreshApiPresetSelect()
+      applyPresetToForm(getActivePreset())
+      flashFormSwitched()
+      savePresetState()
+      showToast('已删除「' + removedName + '」')
+    })
+
+    // ====== 初始化 ======
+    PluginSDK.onReady(function (params) {
+      // 地址池：只在内存里补齐槽位/迁移旧 base_url，不在这里写盘（避免 host 传来残缺 params 时把配置冲掉）
+      serverEntries = normalizeServerEntries(params.server_urls, params.base_url)
+      renderServerRows()
+      if (params.per_server_concurrency != null) perServerConcurrencyInput.value = params.per_server_concurrency
+      if (params.poll_interval_sec != null) pollIntervalInput.value = params.poll_interval_sec
+      if (params.max_wait_sec != null) maxWaitInput.value = params.max_wait_sec
+      if (params.request_timeout != null) requestTimeoutInput.value = params.request_timeout
+      if (params.free_vram_between_generate != null) {
+        freeVramCheck.checked = !!params.free_vram_between_generate
+      }
+      if (params.upload_url_path != null) uploadUrlPathInput.value = params.upload_url_path
+
+      // 关键：只在内存里迁移，绝不在 onReady 阶段立即写盘。
+      // 原因：如果 host 因任何原因在启动时给我们传了"残缺/空"的 params，
+      // 立即 savePresetState 会用空数据把磁盘文件 nuke 掉，造成"重启后所有配置消失"。
+      // 改为 lazy：用户实际改动或操作（新建/删除/重命名/切换）时才写盘。
+      var presets = Array.isArray(params.api_presets)
+        ? params.api_presets.filter(function (p) { return p && typeof p === 'object' })
+        : []
+      if (presets.length === 0) {
+        presets = [migrateLegacyParamsToPreset(params)]
+      }
+      presets = mergeBuiltinPresets(presets, params.builtin_api_presets)
+      apiPresets = presets
+
+      var idx = parseInt(params.active_preset_index, 10)
+      if (isNaN(idx) || idx < 0 || idx >= apiPresets.length) idx = 0
+      activePresetIdx = idx
+
+      refreshApiPresetSelect()
+      applyPresetToForm(getActivePreset())
+
+      setTimeout(function () { checkPluginUpdate(true) }, 800)
+
+      // 面板连通性 + 在飞任务数轮询
+      setTimeout(checkAllServerStatus, 1200)
+      setInterval(checkAllServerStatus, 20000)
+      setTimeout(pollRunningServers, 2000)
+      setInterval(pollRunningServers, 3000)
+    })
+  </script>
+</body>
+</html>
