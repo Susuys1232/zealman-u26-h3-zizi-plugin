@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "plugin_id": "zealman-U26-H3-粟粟直连",
+  "version": "1.0.0",
+  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.0/zealman-U26-H3-zizi-v1.0.0.zip",
+  "sha256": "ba37c830e9139eb5fc540db20219d7e0958cad6f9203305701de358bd5d74182",
+  "changelog": "首个自动更新版本：U26/U24、提示词优化、去油开关、二采分块、真实排队状态。"
+}
