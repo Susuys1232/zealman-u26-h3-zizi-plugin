@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plugin_id": "zealman-U26-H3-粟粟直连",
-  "version": "1.0.1",
-  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.1/zealman-U26-H3-zizi-v1.0.1.zip",
-  "sha256": "261db19c0a75cf1957f6d9c37cfedd74603e5b46ba64923fadeb99bc858d4e72",
-  "changelog": "隐藏无效的宽度键名和高度键名设置。"
+  "version": "1.0.2",
+  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.2/zealman-U26-H3-zizi-v1.0.2.zip",
+  "sha256": "634987f4b9d5b8d0ee839c7bd4f8933a496ddc3095ccd84bd599fa809b7f4673",
+  "changelog": "U24 自动补回；隐藏固定映射与无效字段；自定义平台完整配置；删除确认；更新检查多线路回退。"
 }
