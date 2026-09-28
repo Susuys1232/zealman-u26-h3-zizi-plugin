@@ -70,10 +70,11 @@ _PLUGIN_FILE = __file__
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _PRESETS_FILE = os.path.join(_PLUGIN_DIR, "presets.json")
 _PLUGIN_ID = "zealman-U26-H3-粟粟直连"
-_PLUGIN_VERSION = "1.0.1"
-_UPDATE_MANIFEST_URL = (
-    "https://raw.githubusercontent.com/Susuys1232/"
-    "zealman-u26-h3-zizi-plugin/main/manifest.json"
+_PLUGIN_VERSION = "1.0.2"
+_UPDATE_MANIFEST_URLS = (
+    "https://raw.githubusercontent.com/Susuys1232/zealman-u26-h3-zizi-plugin/main/manifest.json",
+    "https://cdn.jsdelivr.net/gh/Susuys1232/zealman-u26-h3-zizi-plugin@main/manifest.json",
+    "https://api.github.com/repos/Susuys1232/zealman-u26-h3-zizi-plugin/contents/manifest.json",
 )
 
 _DEFAULT_PARAMS = {
@@ -224,6 +225,8 @@ def _normalize_builtin_api_preset(raw: Dict[str, Any]) -> Dict[str, Any]:
         "custom_input_values": raw.get("custom_input_values") if isinstance(raw.get("custom_input_values"), list) else [],
         "fixed_input_values": raw.get("fixed_input_values") if isinstance(raw.get("fixed_input_values"), dict) else {},
     }
+    if isinstance(raw.get("workflow_template"), dict):
+        preset["workflow_template"] = copy.deepcopy(raw["workflow_template"])
 
     image_maps = raw.get("image_input_mappings")
     if isinstance(image_maps, list):
@@ -272,12 +275,21 @@ def _merge_builtin_api_presets(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
     """保留当前插件内已配置的 U26/U24 专用预设。"""
     raw_existing = cfg.get("api_presets")
     if isinstance(raw_existing, list) and raw_existing:
-        return [p for p in raw_existing if isinstance(p, dict)]
-    legacy = _legacy_config_as_preset(cfg)
-    if legacy:
-        return [legacy]
-    builtins = [_normalize_builtin_api_preset(raw) for raw in _load_builtin_api_presets()]
-    return builtins
+        presets = [copy.deepcopy(p) for p in raw_existing if isinstance(p, dict)]
+    else:
+        legacy = _legacy_config_as_preset(cfg)
+        presets = [legacy] if legacy else []
+
+    seen = {
+        str(preset.get("workflow_id") or preset.get("id") or preset.get("name") or "")
+        for preset in presets
+    }
+    for raw in _load_builtin_api_presets():
+        ident = str(raw.get("workflow_id") or raw.get("id") or raw.get("name") or "")
+        if ident and ident not in seen:
+            presets.append(copy.deepcopy(raw))
+            seen.add(ident)
+    return presets
 
 
 def get_params():
@@ -294,7 +306,7 @@ def get_params():
         },
     )
     params["server_urls"] = _normalize_server_entries(params.get("server_urls"), params.get("base_url"))
-    params["builtin_api_presets"] = merged_presets
+    params["builtin_api_presets"] = _load_builtin_api_presets()
     return params
 
 
@@ -2819,12 +2831,28 @@ def _version_tuple(value: Any) -> Tuple[int, ...]:
 
 
 def _check_plugin_update() -> Dict[str, Any]:
-    try:
-        response = requests.get(_UPDATE_MANIFEST_URL, timeout=(8, 25))
-        response.raise_for_status()
-        manifest = response.json()
-    except Exception as exc:
-        return {"ok": False, "error": f"检查更新失败: {exc}"}
+    manifest = None
+    manifest_url = ""
+    errors: List[str] = []
+    headers = {"User-Agent": "zealman-u26-h3-zizi-plugin"}
+    for url in _UPDATE_MANIFEST_URLS:
+        try:
+            response = requests.get(url, headers=headers, timeout=(5, 12))
+            response.raise_for_status()
+            payload = response.json()
+            if "api.github.com" in url and isinstance(payload, dict) and payload.get("content"):
+                raw = base64.b64decode(str(payload["content"])).decode("utf-8-sig")
+                payload = json.loads(raw)
+            if not isinstance(payload, dict):
+                raise ValueError("返回内容不是 JSON 对象")
+            manifest = payload
+            manifest_url = url
+            break
+        except Exception as exc:
+            errors.append(f"{url}: {exc}")
+    if manifest is None:
+        print("[zealman-U26-H3] 检查更新失败: " + " | ".join(errors))
+        return {"ok": False, "error": "连接更新服务器超时，请稍后重试"}
     if not isinstance(manifest, dict):
         return {"ok": False, "error": "更新清单格式错误"}
     latest = str(manifest.get("version") or "").strip()
@@ -2839,7 +2867,7 @@ def _check_plugin_update() -> Dict[str, Any]:
         "download_url": download_url,
         "sha256": str(manifest.get("sha256") or "").strip().lower(),
         "notes": str(manifest.get("changelog") or "").strip() or "无更新说明",
-        "manifest_url": _UPDATE_MANIFEST_URL,
+        "manifest_url": manifest_url,
     }
 
 

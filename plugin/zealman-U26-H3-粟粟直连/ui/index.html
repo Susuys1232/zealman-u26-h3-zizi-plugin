@@ -455,6 +455,16 @@
       gap: 16px;
     }
 
+    .optimizer-panel .form-label {
+      width: 150px;
+      min-width: 150px;
+      max-width: 150px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.35;
+    }
+
     .optimizer-panel input[type="checkbox"],
     .optimizer-panel input[type="radio"] {
       width: auto;
@@ -467,9 +477,77 @@
       margin-right: 20px;
     }
 
-    #widthSettingsRow,
-    #heightSettingsRow {
+    .optimizer-custom-only.hidden,
+    .optimizer-preset-only.hidden {
       display: none;
+    }
+
+    #widthSettingsRow,
+    #heightSettingsRow,
+    #seedSettingsRow {
+      display: none;
+    }
+
+    .fixed-media-mapping-ui {
+      display: none !important;
+    }
+
+    .confirm-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(0, 0, 0, 0.58);
+    }
+
+    .confirm-modal.hidden {
+      display: none;
+    }
+
+    .confirm-dialog {
+      width: min(390px, 100%);
+      padding: 16px;
+      border: 1px solid rgba(120, 120, 140, 0.45);
+      border-radius: 8px;
+      background: #171926;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+    }
+
+    .confirm-title {
+      margin-bottom: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .confirm-message {
+      margin-bottom: 18px;
+      color: var(--text-muted, #aeb4c2);
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .confirm-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .confirm-danger {
+      border-color: rgba(239, 68, 68, 0.7) !important;
+      background: rgba(239, 68, 68, 0.18) !important;
+      color: #fecaca !important;
+    }
+
+    #updateStatus {
+      flex: 1 1 180px;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      overflow-wrap: anywhere;
+      line-height: 1.35;
     }
   </style>
 </head>
@@ -486,7 +564,7 @@
     <label class="form-label">插件更新</label>
     <div class="form-control pair-row">
       <button type="button" id="checkUpdateBtn" class="mini-btn">检查更新</button>
-      <span id="updateStatus" class="field-hint">当前版本 v1.0.1</span>
+      <span id="updateStatus" class="field-hint">当前版本 v1.0.2</span>
     </div>
   </div>
 
@@ -556,7 +634,7 @@
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="form-row" id="seedSettingsRow">
     <label class="form-label form-label-stacked">种子键名ID<br>种子值你写</label>
     <div class="form-control pair-row tone-seed">
       <input type="text" id="seedKeyInput" class="mono-input" placeholder="种子ID:类型">
@@ -570,36 +648,36 @@
     </div>
   </div>
 
-  <div class="form-row section-title-row">
+  <div class="form-row section-title-row fixed-media-mapping-ui">
     <label class="form-label"></label>
     <div class="form-control"><span class="section-title">图片映射（首帧 / 尾帧 / 参考图1–14，最多 14 行）</span></div>
   </div>
-  <div id="imageMapsContainer"></div>
-  <div class="form-row">
+  <div id="imageMapsContainer" class="fixed-media-mapping-ui"></div>
+  <div class="form-row fixed-media-mapping-ui">
     <label class="form-label"></label>
     <div class="form-control">
       <button type="button" id="addImageMapBtn" class="mini-btn">+ 添加图片映射</button>
     </div>
   </div>
 
-  <div class="form-row section-title-row">
+  <div class="form-row section-title-row fixed-media-mapping-ui">
     <label class="form-label"></label>
     <div class="form-control"><span class="section-title">视频映射（原视频 / 视频1–14，最多 14 行；键名写入 input_values 发给 ComfyUI）</span></div>
   </div>
-  <div id="videoMapsContainer"></div>
-  <div class="form-row">
+  <div id="videoMapsContainer" class="fixed-media-mapping-ui"></div>
+  <div class="form-row fixed-media-mapping-ui">
     <label class="form-label"></label>
     <div class="form-control">
       <button type="button" id="addVideoMapBtn" class="mini-btn">+ 添加视频映射</button>
     </div>
   </div>
 
-  <div class="form-row section-title-row">
+  <div class="form-row section-title-row fixed-media-mapping-ui">
     <label class="form-label"></label>
     <div class="form-control"><span class="section-title">音频映射（分镜音频 / 外部音频 / 音频1–14，最多 14 行；对口型、音驱工作流用它喂 LoadAudio）</span></div>
   </div>
-  <div id="audioMapsContainer"></div>
-  <div class="form-row">
+  <div id="audioMapsContainer" class="fixed-media-mapping-ui"></div>
+  <div class="form-row fixed-media-mapping-ui">
     <label class="form-label"></label>
     <div class="form-control">
       <button type="button" id="addAudioMapBtn" class="mini-btn">+ 添加音频映射</button>
@@ -690,7 +768,15 @@
     </div>
     <div class="form-row">
       <label class="form-label">模型</label>
-      <div class="form-control"><select id="optimizerModelInput" class="mono-input"><option value="openai/gpt-5.6-sol">openai/gpt-5.6-sol</option><option value="google/gemini-3.6-flash">google/gemini-3.6-flash</option><option value="openai/gpt-5.5">openai/gpt-5.5</option><option value="google/gemini-2.5-pro">google/gemini-2.5-pro</option><option value="google/gemini-2.5-flash">google/gemini-2.5-flash</option><option value="qwen/qwen3.8-max">qwen/qwen3.8-max</option><option value="deepseek/deepseek-v4-pro">deepseek/deepseek-v4-pro</option><option value="deepseek/deepseek-v4-flash">deepseek/deepseek-v4-flash</option><option value="qwen/qwen3.6-plus">qwen/qwen3.6-plus</option><option value="glm-5.2">glm-5.2</option><option value="minimax/minimax-m2.7">minimax/minimax-m2.7</option></select></div>
+      <div class="form-control"><select id="optimizerModelInput" class="mono-input optimizer-preset-only"><option value="openai/gpt-5.6-sol">openai/gpt-5.6-sol</option><option value="google/gemini-3.6-flash">google/gemini-3.6-flash</option><option value="openai/gpt-5.5">openai/gpt-5.5</option><option value="google/gemini-2.5-pro">google/gemini-2.5-pro</option><option value="google/gemini-2.5-flash">google/gemini-2.5-flash</option><option value="qwen/qwen3.8-max">qwen/qwen3.8-max</option><option value="deepseek/deepseek-v4-pro">deepseek/deepseek-v4-pro</option><option value="deepseek/deepseek-v4-flash">deepseek/deepseek-v4-flash</option><option value="qwen/qwen3.6-plus">qwen/qwen3.6-plus</option><option value="glm-5.2">glm-5.2</option><option value="minimax/minimax-m2.7">minimax/minimax-m2.7</option></select><input id="optimizerCustomModelInput" type="text" class="mono-input optimizer-custom-only hidden" placeholder="例如 gpt-4.1-mini"></div>
+    </div>
+    <div class="form-row optimizer-custom-only hidden" id="optimizerApiUrlRow">
+      <label class="form-label">API 地址</label>
+      <div class="form-control"><input id="optimizerApiUrlInput" type="text" class="mono-input" placeholder="https://api.example.com/v1"></div>
+    </div>
+    <div class="form-row optimizer-custom-only hidden" id="optimizerProtocolRow">
+      <label class="form-label">协议</label>
+      <div class="form-control"><select id="optimizerProtocolInput" class="mono-input"><option value="openai">OpenAI Chat Completions</option><option value="responses">OpenAI Responses</option><option value="gemini">Gemini GenerateContent</option></select></div>
     </div>
     <div class="form-row">
       <label class="form-label">最大输出 Tokens</label>
@@ -707,6 +793,17 @@
     <div class="form-row">
       <label class="form-label">运行前自动优化提示词</label>
       <div class="form-control"><input id="optimizerAutoInput" type="checkbox"></div>
+    </div>
+  </div>
+
+  <div id="deleteConfirmModal" class="confirm-modal hidden" role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle">
+    <div class="confirm-dialog">
+      <div id="deleteConfirmTitle" class="confirm-title">确认删除 API</div>
+      <div id="deleteConfirmMessage" class="confirm-message"></div>
+      <div class="confirm-actions">
+        <button type="button" id="deleteConfirmCancelBtn" class="mini-btn">取消</button>
+        <button type="button" id="deleteConfirmOkBtn" class="mini-btn confirm-danger">确认删除</button>
+      </div>
     </div>
   </div>
 
@@ -752,12 +849,20 @@
     var optimizerProviderInput = document.getElementById('optimizerProviderInput')
     var optimizerApiKeyInput = document.getElementById('optimizerApiKeyInput')
     var optimizerModelInput = document.getElementById('optimizerModelInput')
+    var optimizerCustomModelInput = document.getElementById('optimizerCustomModelInput')
+    var optimizerApiUrlInput = document.getElementById('optimizerApiUrlInput')
+    var optimizerProtocolInput = document.getElementById('optimizerProtocolInput')
     var optimizerMaxTokensInput = document.getElementById('optimizerMaxTokensInput')
     var optimizerReadMediaInput = document.getElementById('optimizerReadMediaInput')
     var optimizerAutoInput = document.getElementById('optimizerAutoInput')
     var checkUpdateBtn = document.getElementById('checkUpdateBtn')
     var updateStatus = document.getElementById('updateStatus')
     var pendingUpdate = null
+    var deleteConfirmModal = document.getElementById('deleteConfirmModal')
+    var deleteConfirmMessage = document.getElementById('deleteConfirmMessage')
+    var deleteConfirmCancelBtn = document.getElementById('deleteConfirmCancelBtn')
+    var deleteConfirmOkBtn = document.getElementById('deleteConfirmOkBtn')
+    var pendingDeleteAction = null
     var outputWidthInput = document.getElementById('outputWidthInput')
     var outputHeightInput = document.getElementById('outputHeightInput')
     var pollIntervalInput = document.getElementById('pollIntervalInput')
@@ -777,6 +882,8 @@
       { key: '__h3_optimizer.provider', label: '平台', value: 'runninghub' },
       { key: '__h3_optimizer.api_key', label: 'API Key', value: '' },
       { key: '__h3_optimizer.model', label: '模型', value: 'google/gemini-3.6-flash' },
+      { key: '__h3_optimizer.api_url', label: 'API 地址', value: '' },
+      { key: '__h3_optimizer.protocol', label: '协议', value: 'openai' },
       { key: '__h3_optimizer.max_tokens', label: '最大输出 Tokens', value: 4096 },
       { key: '__h3_optimizer.output_language', label: '输出语言', value: '中文' },
       { key: '__h3_optimizer.read_media', label: '读取视觉素材', value: 'true' },
@@ -1440,12 +1547,27 @@
       }, 250)
     }
 
-    function removeCustomFieldRow(row) {
+    function removeCustomFieldRowNow(row) {
       var i = customFieldRows.indexOf(row)
       if (i === -1) return
       customFieldRows.splice(i, 1)
       row.wrap.remove()
       saveCustomFields()
+    }
+
+    function removeCustomFieldRow(row) {
+      var key = String(row.keyInput.value || '').trim()
+      var value = String(row.valInput.value || '').trim()
+      if (!key && !value) {
+        removeCustomFieldRowNow(row)
+        return
+      }
+      var displayName = String(row.label.textContent || '').trim() || key || '该参数'
+      openDeleteConfirm(
+        '确认删除参数',
+        '确定删除「' + displayName + '」吗？当前填写的参数内容将被移除。',
+        function () { removeCustomFieldRowNow(row) }
+      )
     }
 
     function normalizeWorkflowEnumValue(key, value) {
@@ -1636,7 +1758,11 @@
       setSelectValue(optimizerModeInput, getOptimizerValue(map, '__h3_optimizer.mode', 'api'))
       setSelectValue(optimizerProviderInput, getOptimizerValue(map, '__h3_optimizer.provider', 'runninghub'))
       optimizerApiKeyInput.value = getOptimizerValue(map, '__h3_optimizer.api_key', '') || ''
-      setSelectValue(optimizerModelInput, getOptimizerValue(map, '__h3_optimizer.model', 'google/gemini-3.6-flash'))
+      var modelValue = getOptimizerValue(map, '__h3_optimizer.model', 'google/gemini-3.6-flash')
+      setSelectValue(optimizerModelInput, modelValue)
+      optimizerCustomModelInput.value = modelValue || ''
+      optimizerApiUrlInput.value = getOptimizerValue(map, '__h3_optimizer.api_url', '') || ''
+      setSelectValue(optimizerProtocolInput, getOptimizerValue(map, '__h3_optimizer.protocol', 'openai'))
       optimizerMaxTokensInput.value = getOptimizerValue(map, '__h3_optimizer.max_tokens', 4096)
       var lang = String(getOptimizerValue(map, '__h3_optimizer.output_language', '中文'))
       document.querySelectorAll('input[name="optimizerLang"]').forEach(function (radio) {
@@ -1644,6 +1770,21 @@
       })
       optimizerReadMediaInput.checked = boolString(getOptimizerValue(map, '__h3_optimizer.read_media', 'true'), true) === 'true'
       optimizerAutoInput.checked = boolString(getOptimizerValue(map, '__h3_optimizer.auto_optimize', 'false'), false) === 'true'
+      updateOptimizerProviderUi()
+    }
+
+    function updateOptimizerProviderUi() {
+      var custom = optimizerProviderInput.value === 'custom'
+      document.querySelectorAll('.optimizer-custom-only').forEach(function (el) {
+        el.classList.toggle('hidden', !custom)
+      })
+      document.querySelectorAll('.optimizer-preset-only').forEach(function (el) {
+        el.classList.toggle('hidden', custom)
+      })
+      if (!custom) {
+        var preset = optimizerProviderDefaults[optimizerProviderInput.value]
+        if (preset && !optimizerModelInput.value) setSelectValue(optimizerModelInput, preset.model)
+      }
     }
 
     function collectOptimizerItems() {
@@ -1655,7 +1796,9 @@
         '__h3_optimizer.mode': optimizerModeInput.value,
         '__h3_optimizer.provider': optimizerProviderInput.value,
         '__h3_optimizer.api_key': optimizerApiKeyInput.value,
-        '__h3_optimizer.model': optimizerModelInput.value,
+        '__h3_optimizer.model': optimizerProviderInput.value === 'custom' ? optimizerCustomModelInput.value : optimizerModelInput.value,
+        '__h3_optimizer.api_url': optimizerProviderInput.value === 'custom' ? optimizerApiUrlInput.value : (optimizerProviderDefaults[optimizerProviderInput.value] || {}).url || '',
+        '__h3_optimizer.protocol': optimizerProviderInput.value === 'custom' ? optimizerProtocolInput.value : (optimizerProviderDefaults[optimizerProviderInput.value] || {}).protocol || 'openai',
         '__h3_optimizer.max_tokens': parseInt(optimizerMaxTokensInput.value, 10) || 4096,
         '__h3_optimizer.output_language': lang,
         '__h3_optimizer.read_media': optimizerReadMediaInput.checked ? 'true' : 'false',
@@ -2310,7 +2453,7 @@
       PluginSDK.sendAction('check_update', {}, { timeoutMs: 40000 }).catch(function (err) {
         checkUpdateBtn.disabled = false
         checkUpdateBtn.textContent = '检查更新'
-        if (!silent) updateStatus.textContent = '检查失败：' + String(err || '')
+        updateStatus.textContent = '暂时无法连接更新服务器，请稍后重试'
       })
     }
 
@@ -2318,7 +2461,7 @@
       checkUpdateBtn.disabled = false
       if (!data || !data.ok) {
         checkUpdateBtn.textContent = '检查更新'
-        updateStatus.textContent = (data && data.error) || '检查更新失败'
+        updateStatus.textContent = (data && data.error) || '暂时无法连接更新服务器'
         return
       }
       updateStatus.textContent = '当前 v' + data.current_version + (data.has_update ? '，发现 v' + data.latest_version : '，已是最新版')
@@ -2362,9 +2505,17 @@
       }
     })
     ;[optimizerModeInput, optimizerProviderInput, optimizerApiKeyInput, optimizerModelInput,
+      optimizerCustomModelInput, optimizerApiUrlInput, optimizerProtocolInput,
       optimizerMaxTokensInput, optimizerReadMediaInput, optimizerAutoInput].forEach(function (el) {
       el.addEventListener('change', saveCustomFields)
       el.addEventListener('input', scheduleSaveCustomFields)
+    })
+    optimizerProviderInput.addEventListener('change', function () {
+      var preset = optimizerProviderDefaults[optimizerProviderInput.value]
+      if (preset && optimizerProviderInput.value !== 'custom') {
+        setSelectValue(optimizerModelInput, preset.model)
+      }
+      updateOptimizerProviderUi()
     })
     document.querySelectorAll('input[name="optimizerLang"]').forEach(function (el) {
       el.addEventListener('change', saveCustomFields)
@@ -2473,31 +2624,27 @@
       showToast('已基于当前配置创建副本「' + newName + '」，可在此基础上修改')
     })
 
-    // 双击确认删除：避免 iframe 内 window.confirm 可能被静默 false 的情况
-    var _deleteOriginalLabel = deleteApiBtn.textContent
-    var _deleteArmed = false
-    var _deleteArmTimer = null
-    function _disarmDelete() {
-      _deleteArmed = false
-      deleteApiBtn.textContent = _deleteOriginalLabel
-      deleteApiBtn.classList.remove('preset-delete-armed')
-      if (_deleteArmTimer) { clearTimeout(_deleteArmTimer); _deleteArmTimer = null }
+    function closeDeleteConfirm() {
+      deleteConfirmModal.classList.add('hidden')
+      pendingDeleteAction = null
     }
-    deleteApiBtn.addEventListener('click', function () {
-      if (apiPresets.length <= 1) {
-        alert('至少需要保留一个 API 预设。如需重置，请直接在表单里改字段。')
-        return
-      }
-      if (!_deleteArmed) {
-        _deleteArmed = true
-        var preset = apiPresets[activePresetIdx]
-        var displayName = (preset && preset.name) ? preset.name : ('API_' + (activePresetIdx + 1))
-        deleteApiBtn.textContent = '再次点击删除「' + displayName + '」'
-        deleteApiBtn.classList.add('preset-delete-armed')
-        _deleteArmTimer = setTimeout(_disarmDelete, 3000)
-        return
-      }
-      _disarmDelete()
+
+    function openDeleteConfirm(title, message, action) {
+      document.getElementById('deleteConfirmTitle').textContent = title
+      deleteConfirmMessage.textContent = message
+      pendingDeleteAction = action
+      deleteConfirmModal.classList.remove('hidden')
+      deleteConfirmCancelBtn.focus()
+    }
+
+    function confirmPendingDelete() {
+      var action = pendingDeleteAction
+      pendingDeleteAction = null
+      if (typeof action === 'function') action()
+      if (!deleteConfirmModal.classList.contains('hidden')) closeDeleteConfirm()
+    }
+
+    function deleteActivePreset() {
       var removed = apiPresets[activePresetIdx]
       var removedName = (removed && removed.name) ? removed.name : ('API_' + (activePresetIdx + 1))
       apiPresets.splice(activePresetIdx, 1)
@@ -2507,7 +2654,27 @@
       applyPresetToForm(getActivePreset())
       flashFormSwitched()
       savePresetState()
+      closeDeleteConfirm()
       showToast('已删除「' + removedName + '」')
+    }
+
+    deleteApiBtn.addEventListener('click', function () {
+      if (apiPresets.length <= 1) {
+        alert('至少需要保留一个 API 预设。如需重置，请直接在表单里改字段。')
+        return
+      }
+      var preset = apiPresets[activePresetIdx]
+      var displayName = (preset && preset.name) ? preset.name : ('API_' + (activePresetIdx + 1))
+      openDeleteConfirm(
+        '确认删除 API',
+        '确定删除「' + displayName + '」吗？删除后需要重新导入或从内置预设恢复。',
+        deleteActivePreset
+      )
+    })
+    deleteConfirmCancelBtn.addEventListener('click', closeDeleteConfirm)
+    deleteConfirmOkBtn.addEventListener('click', confirmPendingDelete)
+    deleteConfirmModal.addEventListener('click', function (event) {
+      if (event.target === deleteConfirmModal) closeDeleteConfirm()
     })
 
     // ====== 初始化 ======
