@@ -466,6 +466,11 @@
       gap: 6px;
       margin-right: 20px;
     }
+
+    #widthSettingsRow,
+    #heightSettingsRow {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -481,7 +486,7 @@
     <label class="form-label">插件更新</label>
     <div class="form-control pair-row">
       <button type="button" id="checkUpdateBtn" class="mini-btn">检查更新</button>
-      <span id="updateStatus" class="field-hint">当前版本 v1.0.0</span>
+      <span id="updateStatus" class="field-hint">当前版本 v1.0.1</span>
     </div>
   </div>
 
@@ -535,7 +540,7 @@
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="form-row" id="widthSettingsRow">
     <label class="form-label form-label-stacked">宽度键名ID<br>宽度值你写</label>
     <div class="form-control pair-row tone-width">
       <input type="text" id="widthKeyInput" class="mono-input" placeholder="宽度ID:类型">
@@ -543,7 +548,7 @@
     </div>
   </div>
 
-  <div class="form-row">
+  <div class="form-row" id="heightSettingsRow">
     <label class="form-label form-label-stacked">高度键名ID<br>高度值你写</label>
     <div class="form-control pair-row tone-height">
       <input type="text" id="heightKeyInput" class="mono-input tone-width-key" placeholder="高度ID:类型">
