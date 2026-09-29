@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plugin_id": "zealman-U26-H3-粟粟直连",
-  "version": "1.0.3",
-  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.3/zealman-U26-H3-zizi-v1.0.3.zip",
-  "sha256": "5c3fe7236655f19f7a13049dc032048cb1dd2b9d5773aa1072ef45a6b59139eb",
-  "changelog": "自定义平台支持获取模型、真实模型下拉、自定义模型输入和测试连接；API Key 掩码显示；修复中文请求头编码及模型区域布局。"
+  "version": "1.0.4",
+  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.4/zealman-U26-H3-zizi-v1.0.4.zip",
+  "sha256": "b11b42d86a10aceaff34c91a0bc3f0ef33a76a9a3036391f0d48b0f8b9c00f2a",
+  "changelog": "修复获取模型编码错误；增加真实模型下拉、自定义模型输入和测试连接；修复按钮反馈与布局；API Key 掩码显示。"
 }
