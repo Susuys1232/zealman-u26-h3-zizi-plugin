@@ -70,7 +70,7 @@ _PLUGIN_FILE = __file__
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _PRESETS_FILE = os.path.join(_PLUGIN_DIR, "presets.json")
 _PLUGIN_ID = "zealman-U26-H3-粟粟直连"
-_PLUGIN_VERSION = "1.0.4"
+_PLUGIN_VERSION = "1.0.5"
 _UPDATE_MANIFEST_URLS = (
     "https://raw.githubusercontent.com/Susuys1232/zealman-u26-h3-zizi-plugin/main/manifest.json",
     "https://cdn.jsdelivr.net/gh/Susuys1232/zealman-u26-h3-zizi-plugin@main/manifest.json",
@@ -272,22 +272,39 @@ def _legacy_config_as_preset(cfg: Dict[str, Any]) -> Optional[Dict[str, Any]]:
 
 
 def _merge_builtin_api_presets(cfg: Dict[str, Any]) -> List[Dict[str, Any]]:
-    """保留当前插件内已配置的 U26/U24 专用预设。"""
+    """内置 U26/U24 始终存在并置顶，过滤宿主自动创建的空 API。"""
     raw_existing = cfg.get("api_presets")
     if isinstance(raw_existing, list) and raw_existing:
-        presets = [copy.deepcopy(p) for p in raw_existing if isinstance(p, dict)]
+        existing = [
+            copy.deepcopy(p)
+            for p in raw_existing
+            if isinstance(p, dict) and str(p.get("workflow_id") or "").strip()
+        ]
     else:
         legacy = _legacy_config_as_preset(cfg)
-        presets = [legacy] if legacy else []
+        existing = [legacy] if legacy and str(legacy.get("workflow_id") or "").strip() else []
 
-    seen = {
+    builtins = [copy.deepcopy(raw) for raw in _load_builtin_api_presets()]
+    builtin_ids = {
         str(preset.get("workflow_id") or preset.get("id") or preset.get("name") or "")
-        for preset in presets
+        for preset in builtins
     }
-    for raw in _load_builtin_api_presets():
-        ident = str(raw.get("workflow_id") or raw.get("id") or raw.get("name") or "")
+    presets = builtins
+    seen = set(builtin_ids)
+    for preset in existing:
+        ident = str(preset.get("workflow_id") or preset.get("id") or preset.get("name") or "")
+        if ident in builtin_ids:
+            # 用户保存过的内置预设参数优先，但模板缺失时由内置版本补全。
+            index = next(
+                i for i, item in enumerate(presets)
+                if str(item.get("workflow_id") or item.get("id") or item.get("name") or "") == ident
+            )
+            if not isinstance(preset.get("workflow_template"), dict):
+                preset["workflow_template"] = copy.deepcopy(presets[index].get("workflow_template"))
+            presets[index] = preset
+            continue
         if ident and ident not in seen:
-            presets.append(copy.deepcopy(raw))
+            presets.append(preset)
             seen.add(ident)
     return presets
 

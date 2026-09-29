@@ -611,7 +611,7 @@
     <label class="form-label">插件更新</label>
     <div class="form-control pair-row">
       <button type="button" id="checkUpdateBtn" class="mini-btn">检查更新</button>
-      <span id="updateStatus" class="field-hint">当前版本 v1.0.4</span>
+      <span id="updateStatus" class="field-hint">当前版本 v1.0.5</span>
     </div>
   </div>
 
@@ -2070,41 +2070,36 @@
     }
 
     function mergeBuiltinPresets(presets, builtinPresets) {
-      var list = Array.isArray(presets) ? presets.slice() : []
-      var seen = {}
-      list.forEach(function (preset) {
-        if (!preset || typeof preset !== 'object') return
-        var id = preset._builtin_id || preset.id || preset.workflow_id || preset.name
-        if (id) seen[String(id)] = true
-        var raw = (Array.isArray(builtinPresets) ? builtinPresets : []).find(function (item) {
-          return item && String(item.id || item.workflow_id || item.name || '') === String(id || '')
-        })
-        if (!raw) return
-        var normalized = normalizeBuiltinPreset(raw)
-        if (!Array.isArray(preset.custom_fields) || !preset.custom_fields.length) {
-          preset.custom_fields = normalized.custom_fields || []
-        }
-        var metadataByKey = {}
-        ;(normalized.custom_fields || []).forEach(function (field) {
-          if (field && field.key) metadataByKey[String(field.key)] = field
-        })
-        if (Array.isArray(preset.custom_input_values)) {
-          preset.custom_input_values = preset.custom_input_values.map(function (item) {
-            if (!item || typeof item !== 'object') return item
-            var metadata = metadataByKey[String(item.key || '')]
-            return metadata ? Object.assign({}, metadata, item) : item
-          })
-        }
+      var validUser = (Array.isArray(presets) ? presets : []).filter(function (preset) {
+        return preset && typeof preset === 'object' && String(preset.workflow_id || '').trim()
       })
-      if (Array.isArray(builtinPresets)) {
-        builtinPresets.forEach(function (raw) {
-          if (!raw || typeof raw !== 'object') return
-          var id = String(raw.id || raw.workflow_id || raw.name || '')
-          if (!id || seen[id]) return
-          list.push(normalizeBuiltinPreset(raw))
-          seen[id] = true
-        })
-      }
+      var userById = {}
+      validUser.forEach(function (preset) {
+        userById[String(preset.workflow_id)] = preset
+      })
+
+      var list = []
+      var seen = {}
+      ;(Array.isArray(builtinPresets) ? builtinPresets : []).forEach(function (raw) {
+        if (!raw || typeof raw !== 'object') return
+        var normalized = normalizeBuiltinPreset(raw)
+        var id = String(normalized.workflow_id || normalized._builtin_id || '')
+        if (!id || seen[id]) return
+        var saved = userById[id]
+        if (saved) {
+          normalized = Object.assign({}, normalized, saved)
+          if (!saved.workflow_template) normalized.workflow_template = raw.workflow_template || normalized.workflow_template
+        }
+        list.push(normalized)
+        seen[id] = true
+      })
+
+      validUser.forEach(function (preset) {
+        var id = String(preset.workflow_id || '')
+        if (!id || seen[id]) return
+        list.push(preset)
+        seen[id] = true
+      })
       return list
     }
 
@@ -2857,11 +2852,12 @@
       // 原因：如果 host 因任何原因在启动时给我们传了"残缺/空"的 params，
       // 立即 savePresetState 会用空数据把磁盘文件 nuke 掉，造成"重启后所有配置消失"。
       // 改为 lazy：用户实际改动或操作（新建/删除/重命名/切换）时才写盘。
-      var presets = Array.isArray(params.api_presets)
-        ? params.api_presets.filter(function (p) { return p && typeof p === 'object' })
-        : []
+      var sourcePresets = Array.isArray(params.api_presets) ? params.api_presets : []
+      var presets = sourcePresets
+        .filter(function (p) { return p && typeof p === 'object' && String(p.workflow_id || '').trim() })
       if (presets.length === 0) {
-        presets = [migrateLegacyParamsToPreset(params)]
+        var legacyPreset = migrateLegacyParamsToPreset(params)
+        presets = legacyPreset && String(legacyPreset.workflow_id || '').trim() ? [legacyPreset] : []
       }
       presets = mergeBuiltinPresets(presets, params.builtin_api_presets)
       apiPresets = presets
@@ -2872,6 +2868,13 @@
 
       refreshApiPresetSelect()
       applyPresetToForm(getActivePreset())
+
+      var hadInvalidPresets = sourcePresets.some(function (preset) {
+        return !preset || typeof preset !== 'object' || !String(preset.workflow_id || '').trim()
+      })
+      if (hadInvalidPresets || sourcePresets.length !== apiPresets.length) {
+        setTimeout(savePresetState, 200)
+      }
 
       if (optimizerProviderInput.value === 'custom') {
         setTimeout(function () { fetchOptimizerModels(true) }, 1000)
