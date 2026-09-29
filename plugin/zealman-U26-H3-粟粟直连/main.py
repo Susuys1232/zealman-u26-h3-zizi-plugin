@@ -70,7 +70,7 @@ _PLUGIN_FILE = __file__
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _PRESETS_FILE = os.path.join(_PLUGIN_DIR, "presets.json")
 _PLUGIN_ID = "zealman-U26-H3-粟粟直连"
-_PLUGIN_VERSION = "1.0.6"
+_PLUGIN_VERSION = "1.0.7"
 _UPDATE_MANIFEST_URLS = (
     "https://raw.githubusercontent.com/Susuys1232/zealman-u26-h3-zizi-plugin/main/manifest.json",
     "https://cdn.jsdelivr.net/gh/Susuys1232/zealman-u26-h3-zizi-plugin@main/manifest.json",
@@ -3132,6 +3132,15 @@ def handle_action(action, data, context=None):
 
     if action == "get_running_servers":
         return {"ok": True, "running_servers": {str(k): v for k, v in _running_counts().items()}}
+
+    if action == "get_api_presets":
+        params = get_params()
+        return {
+            "ok": True,
+            "api_presets": params.get("api_presets") or [],
+            "builtin_api_presets": params.get("builtin_api_presets") or [],
+            "active_preset_index": params.get("active_preset_index", 0),
+        }
 
     if action == "check_update":
         return _check_plugin_update()

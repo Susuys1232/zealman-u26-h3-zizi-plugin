@@ -611,7 +611,7 @@
     <label class="form-label">插件更新</label>
     <div class="form-control pair-row">
       <button type="button" id="checkUpdateBtn" class="mini-btn">检查更新</button>
-      <span id="updateStatus" class="field-hint">当前版本 v1.0.6</span>
+      <span id="updateStatus" class="field-hint">当前版本 v1.0.7</span>
     </div>
   </div>
 
@@ -2594,6 +2594,30 @@
       saveCustomFields()
     })
 
+    function applyApiPresetsPayload(data, persist) {
+      if (!data || !data.ok) return false
+      var presets = mergeBuiltinPresets(data.api_presets || [], data.builtin_api_presets || [])
+      if (!presets.length) return false
+      apiPresets = presets
+      var idx = parseInt(data.active_preset_index, 10)
+      if (isNaN(idx) || idx < 0 || idx >= apiPresets.length) idx = 0
+      activePresetIdx = idx
+      refreshApiPresetSelect()
+      applyPresetToForm(getActivePreset())
+      if (persist) setTimeout(savePresetState, 100)
+      return true
+    }
+
+    function reloadApiPresetsFromBackend() {
+      PluginSDK.sendAction('get_api_presets', {}, { timeoutMs: 20000 }).then(function (data) {
+        applyApiPresetsPayload(data, true)
+      }).catch(function () {})
+    }
+
+    PluginSDK.onAction('get_api_presets', function (data) {
+      applyApiPresetsPayload(data, true)
+    })
+
     function checkPluginUpdate(silent) {
       if (!silent) updateStatus.textContent = '正在检查更新…'
       checkUpdateBtn.disabled = true
@@ -2809,6 +2833,8 @@
       if (activePresetIdx < 0) activePresetIdx = 0
       refreshApiPresetSelect()
       applyPresetToForm(getActivePreset())
+
+      setTimeout(reloadApiPresetsFromBackend, 200)
       flashFormSwitched()
       savePresetState()
       closeDeleteConfirm()
