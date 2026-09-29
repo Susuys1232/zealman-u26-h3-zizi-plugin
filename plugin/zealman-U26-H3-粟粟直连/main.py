@@ -70,7 +70,7 @@ _PLUGIN_FILE = __file__
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _PRESETS_FILE = os.path.join(_PLUGIN_DIR, "presets.json")
 _PLUGIN_ID = "zealman-U26-H3-粟粟直连"
-_PLUGIN_VERSION = "1.0.2"
+_PLUGIN_VERSION = "1.0.3"
 _UPDATE_MANIFEST_URLS = (
     "https://raw.githubusercontent.com/Susuys1232/zealman-u26-h3-zizi-plugin/main/manifest.json",
     "https://cdn.jsdelivr.net/gh/Susuys1232/zealman-u26-h3-zizi-plugin@main/manifest.json",
@@ -2946,6 +2946,150 @@ def _apply_plugin_update(download_url: str, expected_sha256: str = "") -> Dict[s
         shutil.rmtree(temp_dir, ignore_errors=True)
 
 
+def _list_optimizer_models(data: Dict[str, Any]) -> Dict[str, Any]:
+    base = str(data.get("api_url") or "").strip().rstrip("/")
+    api_key = str(data.get("api_key") or "").strip()
+    protocol = str(data.get("protocol") or "openai").strip().lower()
+    if not base:
+        return {"ok": False, "error": "请先填写 API 地址"}
+    if not api_key:
+        return {"ok": False, "error": "请先填写 API Key"}
+
+    try:
+        if protocol == "gemini":
+            url = f"{base}/models"
+            response = requests.get(
+                url,
+                params={"key": api_key, "pageSize": 1000},
+                headers={"Accept": "application/json"},
+                timeout=(8, 30),
+            )
+        else:
+            url = f"{base}/models"
+            response = requests.get(
+                url,
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Accept": "application/json",
+                    "User-Agent": "zealman-u26-h3-zizi-plugin",
+                },
+                timeout=(8, 30),
+            )
+        response.raise_for_status()
+        payload = response.json()
+    except Exception as exc:
+        detail = ""
+        try:
+            detail = str(response.text or "")[:300]
+        except Exception:
+            pass
+        print(f"[zealman-U26-H3] 获取模型列表失败: {exc}; {detail}")
+        return {"ok": False, "error": f"获取模型列表失败: {exc}"}
+
+    models: List[str] = []
+    if isinstance(payload, dict):
+        items = payload.get("data")
+        if not isinstance(items, list):
+            items = payload.get("models")
+        if isinstance(items, list):
+            for item in items:
+                if isinstance(item, str):
+                    model_id = item
+                elif isinstance(item, dict):
+                    model_id = item.get("id") or item.get("name") or item.get("model")
+                else:
+                    model_id = ""
+                model_id = str(model_id or "").strip()
+                if model_id:
+                    models.append(model_id)
+    models = sorted(set(models), key=str.lower)
+    return {"ok": True, "models": models, "count": len(models)}
+
+
+def _test_optimizer_api(data: Dict[str, Any]) -> Dict[str, Any]:
+    base = str(data.get("api_url") or "").strip().rstrip("/")
+    api_key = str(data.get("api_key") or "").strip()
+    model = str(data.get("model") or "").strip()
+    protocol = str(data.get("protocol") or "openai").strip().lower()
+    if not base:
+        return {"ok": False, "error": "请先填写 API 地址"}
+    if not api_key:
+        return {"ok": False, "error": "请先填写 API Key"}
+    if not model:
+        return {"ok": False, "error": "请先选择或输入模型"}
+
+    started = time.monotonic()
+    try:
+        if protocol == "gemini":
+            model_name = model.removeprefix("models/")
+            url = f"{base}/models/{model_name}:generateContent"
+            response = requests.post(
+                url,
+                params={"key": api_key},
+                json={
+                    "contents": [{"role": "user", "parts": [{"text": "只回复：测试成功"}]}],
+                    "generationConfig": {"maxOutputTokens": 32, "temperature": 0},
+                },
+                headers={"Content-Type": "application/json"},
+                timeout=(8, 60),
+            )
+        elif protocol == "responses":
+            response = requests.post(
+                f"{base}/responses",
+                json={"model": model, "input": "只回复：测试成功", "max_output_tokens": 32},
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                timeout=(8, 60),
+            )
+        else:
+            response = requests.post(
+                f"{base}/chat/completions",
+                json={
+                    "model": model,
+                    "messages": [{"role": "user", "content": "只回复：测试成功"}],
+                    "max_tokens": 32,
+                    "temperature": 0,
+                },
+                headers={
+                    "Authorization": f"Bearer {api_key}",
+                    "Content-Type": "application/json",
+                },
+                timeout=(8, 60),
+            )
+        response.raise_for_status()
+        payload = response.json()
+    except Exception as exc:
+        detail = ""
+        try:
+            detail = str(response.text or "")[:300]
+        except Exception:
+            pass
+        print(f"[zealman-U26-H3] 优化 API 测试失败: {exc}; {detail}")
+        return {"ok": False, "error": f"测试失败: {exc}"}
+
+    elapsed_ms = int((time.monotonic() - started) * 1000)
+    text = ""
+    try:
+        if protocol == "gemini":
+            text = payload["candidates"][0]["content"]["parts"][0]["text"]
+        elif protocol == "responses":
+            text = payload.get("output_text") or ""
+            if not text:
+                text = payload["output"][0]["content"][0]["text"]
+        else:
+            text = payload["choices"][0]["message"]["content"]
+    except Exception:
+        text = "接口已返回有效 JSON"
+    return {
+        "ok": True,
+        "elapsed_ms": elapsed_ms,
+        "model": str(payload.get("model") or model) if isinstance(payload, dict) else model,
+        "message": str(text or "测试成功")[:200],
+    }
+
+
 def handle_action(action, data, context=None):
     data = data if isinstance(data, dict) else {}
 
@@ -2979,6 +3123,12 @@ def handle_action(action, data, context=None):
             str(data.get("download_url") or ""),
             str(data.get("sha256") or ""),
         )
+
+    if action == "list_optimizer_models":
+        return _list_optimizer_models(data)
+
+    if action == "test_optimizer_api":
+        return _test_optimizer_api(data)
 
     return {"ok": False, "error": f"未知动作: {action}"}
 
