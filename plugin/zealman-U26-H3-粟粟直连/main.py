@@ -70,7 +70,7 @@ _PLUGIN_FILE = __file__
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _PRESETS_FILE = os.path.join(_PLUGIN_DIR, "presets.json")
 _PLUGIN_ID = "zealman-U26-H3-粟粟直连"
-_PLUGIN_VERSION = "1.0.5"
+_PLUGIN_VERSION = "1.0.6"
 _UPDATE_MANIFEST_URLS = (
     "https://raw.githubusercontent.com/Susuys1232/zealman-u26-h3-zizi-plugin/main/manifest.json",
     "https://cdn.jsdelivr.net/gh/Susuys1232/zealman-u26-h3-zizi-plugin@main/manifest.json",
@@ -2848,8 +2848,7 @@ def _version_tuple(value: Any) -> Tuple[int, ...]:
 
 
 def _check_plugin_update() -> Dict[str, Any]:
-    manifest = None
-    manifest_url = ""
+    manifests: List[Tuple[Tuple[int, ...], Dict[str, Any], str]] = []
     errors: List[str] = []
     headers = {"User-Agent": "zealman-u26-h3-zizi-plugin"}
     for url in _UPDATE_MANIFEST_URLS:
@@ -2862,14 +2861,16 @@ def _check_plugin_update() -> Dict[str, Any]:
                 payload = json.loads(raw)
             if not isinstance(payload, dict):
                 raise ValueError("返回内容不是 JSON 对象")
-            manifest = payload
-            manifest_url = url
-            break
+            version = str(payload.get("version") or "").strip()
+            if not version:
+                raise ValueError("清单缺少 version")
+            manifests.append((_version_tuple(version), payload, url))
         except Exception as exc:
             errors.append(f"{url}: {exc}")
-    if manifest is None:
+    if not manifests:
         print("[zealman-U26-H3] 检查更新失败: " + " | ".join(errors))
         return {"ok": False, "error": "连接更新服务器超时，请稍后重试"}
+    _, manifest, manifest_url = max(manifests, key=lambda item: item[0])
     if not isinstance(manifest, dict):
         return {"ok": False, "error": "更新清单格式错误"}
     latest = str(manifest.get("version") or "").strip()
