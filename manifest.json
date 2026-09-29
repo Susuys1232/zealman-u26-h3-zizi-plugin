@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "plugin_id": "zealman-U26-H3-粟粟直连",
-  "version": "1.0.10",
-  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.10/zealman-U26-H3-zizi-v1.0.10-6faed3326aeb4b4395b33a524797824b.zip",
-  "sha256": "11c0bdc7259b29acd235c79823f64350538d8619f8f2cea790002ad3ba841906",
-  "changelog": "修复更新检查版本比较错误：修正 Python 与前端版本号解析，旧版本可正常发现最新版。"
+  "version": "1.0.11",
+  "download_url": "https://github.com/Susuys1232/zealman-u26-h3-zizi-plugin/releases/download/v1.0.11/zealman-U26-H3-zizi-v1.0.11-1c46e8dec23149cfb8e4664d69b2f7ea.zip",
+  "sha256": "ee50eee672c898d18152151dd10e0d497c72d3b0e04989cd82fc2fd094fa9607",
+  "changelog": "修复 U26/U24 预设切换显示：内置预设字段结构、标签、下拉选项和素材映射不再被旧配置覆盖，同时保留用户自定义值和优化器配置。"
 }
