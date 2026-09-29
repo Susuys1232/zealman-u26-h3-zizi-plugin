@@ -70,7 +70,7 @@ _PLUGIN_FILE = __file__
 _PLUGIN_DIR = os.path.dirname(os.path.abspath(__file__))
 _PRESETS_FILE = os.path.join(_PLUGIN_DIR, "presets.json")
 _PLUGIN_ID = "zealman-U26-H3-粟粟直连"
-_PLUGIN_VERSION = "1.0.3"
+_PLUGIN_VERSION = "1.0.4"
 _UPDATE_MANIFEST_URLS = (
     "https://raw.githubusercontent.com/Susuys1232/zealman-u26-h3-zizi-plugin/main/manifest.json",
     "https://cdn.jsdelivr.net/gh/Susuys1232/zealman-u26-h3-zizi-plugin@main/manifest.json",
